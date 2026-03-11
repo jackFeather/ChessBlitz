@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CHECKMATE BLITZ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:#04030a;}
+body{display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',monospace;color:#c8c0a8;}
+
+/* ── ROOT — ancient stone vessel, cracked border ── */
+#root{width:820px;height:620px;position:relative;overflow:hidden;
+  background:#06040e;
+  border:2px solid #1e1c34;
+  box-shadow:0 0 0 1px #3a6898,0 0 0 3px #0a0818,0 0 40px rgba(40,80,160,0.3),0 0 100px rgba(0,0,0,0.95);}
+/* Subtle vignette overlay */
+#root::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:9998;
+  background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(0,0,0,0.75) 100%);}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.screen.on{display:flex;}
+
+/* ── MENU — deep cavern bg ── */
+#s-menu{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%230e0c1a'/%3E%3Crect x='0' y='0' width='15' height='15' fill='%23121024'/%3E%3Crect x='17' y='17' width='15' height='15' fill='%23121024'/%3E%3Crect x='0' y='16' width='32' height='1' fill='%23080610'/%3E%3Crect x='16' y='0' width='1' height='16' fill='%23080610'/%3E%3C/svg%3E");}
+/* Flickering soul glow on title */
+.mt{font-size:26px;letter-spacing:5px;animation:hk-glow 3s ease-in-out infinite;}
+.mt.y{color:#7ab4e8;text-shadow:0 0 12px rgba(100,180,240,0.9),0 3px 0 #060820,0 0 40px rgba(60,130,220,0.4);}
+.mt.g{color:#d0c8e8;text-shadow:0 0 10px rgba(200,190,240,0.6),0 3px 0 #060412,0 0 30px rgba(160,140,220,0.3);margin-top:-2px;}
+@keyframes hk-glow{
+  0%,100%{filter:brightness(1) blur(0px);}
+  50%{filter:brightness(1.3) blur(0.3px);}
+}
+/* Subtitle — carved stone inscription */
+.msub{font-size:6px;letter-spacing:3px;line-height:1.8;color:#3a4868;
+  border-top:1px solid #1e2040;border-bottom:1px solid #1e2040;
+  padding:8px 20px;margin:14px 0 32px;background:rgba(4,3,12,0.85);}
+/* Buttons — HK style: dark stone panel with pale edge, soul-blue glow on hover */
+.btn{font-family:'Press Start 2P',monospace;font-size:8px;
+  background:#08060e;color:#8898b8;
+  border:0;outline:none;cursor:pointer;width:260px;margin:5px;
+  padding:12px 0;letter-spacing:1px;
+  border-top:1px solid #2a3858;border-left:1px solid #2a3858;
+  border-right:1px solid #06040c;border-bottom:1px solid #06040c;
+  box-shadow:0 0 0 1px #12102a,2px 3px 0 #02020a;
+  transition:color 0.15s,box-shadow 0.15s;}
+.btn:hover{color:#7ab4e8;
+  border-top-color:#3a6898;border-left-color:#3a6898;
+  box-shadow:0 0 12px rgba(80,160,240,0.35),2px 3px 0 #02020a;
+  transform:translate(-1px,-1px);}
+.btn:active{transform:translate(1px,1px);box-shadow:none;}
+/* Secondary button — soul vessel blue */
+.btn.y{background:#08060e;color:#5878a8;
+  border-top-color:#1e3060;border-left-color:#1e3060;
+  border-right-color:#08060e;border-bottom-color:#08060e;
+  box-shadow:0 0 0 1px #182040,2px 3px 0 #04030a;}
+.btn.y:hover{color:#88c0f0;border-top-color:#3868b0;border-left-color:#3868b0;
+  box-shadow:0 0 10px rgba(60,120,200,0.4),2px 3px 0 #02020a;}
+.hint{position:absolute;bottom:8px;font-size:5px;color:#2a3050;text-align:center;padding:0 20px;}
+
+/* ── LOBBY — same stone bg ── */
+#s-lobby{background:#06040e;}
+.lob-title{font-size:14px;color:#6898c8;margin-bottom:8px;
+  text-shadow:0 0 10px rgba(80,140,200,0.5),0 2px 0 #060820;letter-spacing:3px;}
+/* Stone tablet dialog box */
+.lob-box{
+  background:#06040e;
+  border-top:1px solid #2a3858;border-left:1px solid #2a3858;
+  border-right:1px solid #06040c;border-bottom:1px solid #06040c;
+  box-shadow:0 0 0 1px #10182e,4px 4px 0 #02020a,0 0 20px rgba(40,60,120,0.3);
+  padding:22px 28px;text-align:center;width:374px;color:#6878a0;}
+.lob-code{font-family:'VT323',monospace;font-size:58px;color:#6898c8;
+  letter-spacing:10px;line-height:1;margin:8px 0 12px;
+  text-shadow:0 0 12px rgba(80,140,200,0.5);}
+.lob-slots{display:flex;gap:10px;margin-bottom:16px;}
+.lob-slot{flex:1;border:1px solid #1a2040;padding:8px;background:#04030c;}
+.lob-sn{font-size:6px;line-height:1.6;margin-bottom:4px;color:#485880;}
+.lob-ss{font-size:6px;color:#282838;line-height:1.8;margin-top:2px;}
+/* Code input — carved stone */
+.code-box{width:42px;height:46px;background:#04030c;
+  border-top:1px solid #2a3858;border-left:1px solid #2a3858;
+  border-right:1px solid #06040c;border-bottom:1px solid #06040c;
+  color:#6898c8;font-family:'Press Start 2P',monospace;font-size:17px;
+  text-align:center;text-transform:uppercase;outline:none;caret-color:#c8b860;}
+.code-box:focus{border-color:#3a6898;box-shadow:0 0 8px rgba(60,120,180,0.4);}
+
+/* ── LOADING ── */
+#s-load{background:#06040e;gap:18px;}
+.lt{font-size:10px;color:#5888c0;text-shadow:0 0 10px rgba(60,120,200,0.5);letter-spacing:2px;white-space:nowrap;}
+.lb-o{width:360px;height:8px;background:#04030c;
+  border-top:1px solid #2a2840;border-left:1px solid #2a2840;
+  border-right:1px solid #080610;border-bottom:1px solid #080610;}
+.lb-i{height:100%;background:linear-gradient(90deg,#4868a8,#88b0e0);width:0%;transition:width 0.08s;
+  box-shadow:0 0 8px rgba(100,150,220,0.6);}
+.lm{font-size:6px;line-height:1.8;color:#2a3050;}
+
+/* ── HUD — soul vessel header ── */
+#s-match{flex-direction:column;justify-content:flex-start;align-items:stretch;}
+#hud{height:54px;
+  background:#08060e;
+  border-bottom:1px solid #1e2040;
+  box-shadow:0 2px 0 #02020a,0 2px 8px rgba(20,30,60,0.5);
+  display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0;}
+.hf{flex:1;min-width:0;}
+.hn{font-size:6px;line-height:1.6;margin-bottom:3px;color:#304060;}
+.hn.p1{color:#4878a8;}.hn.p2{color:#885878;}
+.br{display:flex;align-items:center;gap:4px;margin-bottom:2px;}
+.bl{font-size:5px;line-height:1;color:#303858;width:14px;flex-shrink:0;}
+.bo{flex:1;height:6px;background:#04030c;border:1px solid #1a1c30;}
+.bi{height:100%;transition:width 0.12s;}
+.hud-c{width:170px;text-align:center;flex-shrink:0;}
+.phl{font-size:7px;line-height:1.5;margin-bottom:2px;color:#304060;letter-spacing:1px;white-space:nowrap;}
+.td{font-size:28px;color:#5888c0;font-family:'VT323',monospace;line-height:1;
+  text-shadow:0 0 10px rgba(60,120,200,0.5);}
+.td.urg{color:#c04040;animation:blnk 0.4s infinite;text-shadow:0 0 10px rgba(180,40,40,0.7);}
+@keyframes blnk{0%,100%{opacity:1;}50%{opacity:0.1;}}
+.hf.r .hn{text-align:right;}.hf.r .br{flex-direction:row-reverse;}
+.turn-ind{font-size:5px;line-height:1.6;color:#1e2a48;margin-top:1px;white-space:nowrap;}
+#play{position:absolute;top:54px;left:0;right:0;bottom:0;overflow:hidden;}
+
+/* ── CHESS — void bg with soul-lit board ── */
+#ca{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:#06040e;}
+#cc{display:flex;flex-direction:column;align-items:center;gap:2px;}
+#cinfo{font-size:6px;color:#2a3858;height:14px;line-height:14px;text-align:center;white-space:nowrap;}
+#cturn{font-size:7px;height:14px;line-height:14px;text-align:center;font-weight:bold;color:#4878a8;white-space:nowrap;}
+
+/* Board frame — ancient carved stone with gold inlay */
+#cbw{position:relative;width:406px;
+  background:#06040e;
+  padding:10px;
+  border:1px solid #1a2040;
+  box-shadow:0 0 0 1px #3a6898,0 0 0 3px #08060e,0 0 24px rgba(40,80,160,0.4);}
+#cb{display:grid;grid-template-columns:repeat(8,48px);grid-template-rows:repeat(8,48px);
+  border:1px solid #06040e;width:384px;height:384px;}
+/* HK chess squares: pale bone / deep void-stone */
+.cc{width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+  font-size:30px;cursor:grab;position:relative;user-select:none;line-height:1;}
+.cc:active{cursor:grabbing;}
+.cc.lt{background:#282438;}
+.cc.dk{background:#0e0c18;}
+.cc.lt:hover{background:#32304a;}
+.cc.dk:hover{background:#181428;}
+.cc.sel{background:#0e2448!important;box-shadow:inset 0 0 0 2px #3a6898,0 0 8px rgba(60,120,200,0.5);}
+.cc.pos::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;
+  background:rgba(40,100,180,0.2);border:1px solid rgba(60,130,220,0.6);}
+.cc.chk{background:#2a0808!important;box-shadow:inset 0 0 8px rgba(180,20,20,0.6);}
+.ranks{position:absolute;left:-20px;top:10px;width:20px;display:flex;flex-direction:column;}
+.rk{width:18px;height:48px;display:flex;align-items:center;justify-content:center;
+  font-size:6px;color:#1e2848;}
+.files{display:flex;width:384px;}
+.fl{width:48px;text-align:center;font-size:7px;color:#1e2848;padding-top:3px;}
+.clbl{font-size:6px;letter-spacing:2px;line-height:16px;margin:2px 0;color:#3a4870;white-space:nowrap;text-align:center;}
+/* ── MOVE HISTORY LOG ── */
+#chess-wrap{display:flex;gap:10px;align-items:flex-start;}
+#move-log{width:130px;height:384px;background:#04030c;
+  border:1px solid #1a2040;box-shadow:inset 0 0 8px rgba(0,0,0,0.6);
+  overflow-y:auto;padding:6px 5px;flex-shrink:0;
+  scrollbar-width:thin;scrollbar-color:#2a3858 #04030c;}
+#move-log::-webkit-scrollbar{width:4px;}
+#move-log::-webkit-scrollbar-track{background:#04030c;}
+#move-log::-webkit-scrollbar-thumb{background:#2a3858;}
+.ml-head{font-size:6px;color:#2a3858;letter-spacing:2px;margin-bottom:6px;text-align:center;border-bottom:1px solid #1a2040;padding-bottom:4px;}
+.ml-row{display:flex;gap:3px;margin-bottom:3px;align-items:flex-start;}
+.ml-n{font-size:5px;line-height:1.4;color:#2a3860;width:12px;flex-shrink:0;padding-top:3px;text-align:right;}
+.ml-moves{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;}
+.ml-w{font-family:'VT323',monospace;font-size:13px;line-height:1.2;color:#7888b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ml-b{font-family:'VT323',monospace;font-size:13px;line-height:1.2;color:#4a5878;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ml-hi{color:#c8b860!important;}
+@keyframes cap-flash{0%{background:#ff4400;box-shadow:inset 0 0 0 3px #ff8800;}60%{background:#cc2200;box-shadow:inset 0 0 0 2px #ff4400;}100%{background:inherit;box-shadow:none;}}
+.cap-flash{animation:cap-flash 0.4s ease-out;}
+#b-forfeit{background:#08060e!important;color:#582828!important;
+  border-top-color:#281818!important;border-left-color:#281818!important;
+  border-right-color:#060408!important;border-bottom-color:#060408!important;}
+#b-forfeit:hover{color:#c83030!important;border-top-color:#582020!important;border-left-color:#582020!important;
+  box-shadow:0 0 8px rgba(160,20,20,0.4)!important;}
+
+/* ── DRAG GHOST ── */
+#drag-ghost{position:fixed;pointer-events:none;z-index:9999;display:none;
+  font-size:36px;line-height:1;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 6px rgba(200,184,96,0.8));user-select:none;}
+.cc.drag-over{background:#0e1e38!important;box-shadow:inset 0 0 0 2px #3a6898;}
+
+/* ── TANKS CANVAS ── full-screen over HUD during tank phase ── */
+#ba{position:absolute;top:0;left:0;right:0;bottom:0;display:none;z-index:100;}
+#bc{display:block;width:100%;height:100%;}
+#ctrl-hint{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);pointer-events:none;
+  font-size:5px;color:rgba(200,80,20,0.5);white-space:nowrap;}
+
+/* ── WIN/LOSE OVERLAY — HK style soul screen ── */
+#ov{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;z-index:300;background:rgba(2,1,6,0.97);}
+#ov.on{display:flex;}
+/* Animated soul particles (pure CSS) */
+#ov::before{content:'✦  ✦  ✦';position:absolute;top:20%;font-size:8px;
+  color:rgba(60,100,180,0.25);letter-spacing:30px;animation:hk-glow 2s infinite;}
+#ov-board{display:flex;width:288px;height:28px;margin-bottom:4px;
+  border:1px solid #4a4060;box-shadow:0 0 0 1px #c8b860,0 0 12px rgba(200,184,96,0.3);}
+#ov-result{
+  font-family:'Press Start 2P',monospace;font-size:32px;text-align:center;line-height:1.2;}
+#ov-result.win{
+  color:#6ab0f0;
+  text-shadow:0 0 20px rgba(80,160,240,0.9),0 0 40px rgba(40,100,200,0.5),0 4px 0 #02040e;
+  animation:hk-glow 2s infinite;}
+#ov-result.lose{
+  color:#5a4870;
+  text-shadow:0 0 10px rgba(80,40,100,0.5),0 3px 0 #02010a;}
+#ov-result.draw{color:#7888b0;text-shadow:0 0 10px rgba(100,120,180,0.5),0 3px 0 #02010a;}
+.os{font-size:7px;line-height:1.6;color:#2a3860;margin-top:-2px;letter-spacing:1px;text-align:center;}
+/* White pieces: pale blue-white glow; Black pieces: barely visible */
+.cc.lt .piece-w,.cc.dk .piece-w{filter:drop-shadow(0 0 3px rgba(160,200,255,0.6));}
+.cc.lt .piece-b,.cc.dk .piece-b{filter:brightness(0.3) drop-shadow(0 0 2px rgba(40,20,60,0.8));}
+#pf{position:absolute;inset:0;pointer-events:none;z-index:200;opacity:0;}
+</style>
+</head>
+<body>
+<div id="root">
+<div id="drag-ghost"></div>
+
+  <!-- MENU -->
+  <div id="s-menu" class="screen on">
+    <div class="mt y">♟ CHECKMATE</div>
+    <div class="mt g">⚔ BLITZ</div>
+    <div class="msub">★ 35s CHESS · 35s TANK BATTLE · REPEAT ★</div>
+    <button class="btn" id="b-bot">▶ VS BOT</button>
+    <button class="btn" id="b-pvp">▶ ONLINE 2P</button>
+    <div class="hint">35s of chess · 35s of tank battle · keep fighting until checkmate!</div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="s-lobby" class="screen">
+    <div class="lob-title">⚔ ONLINE 2P</div>
+    <div class="msub" style="margin-bottom:14px">PLAY FROM SEPARATE DEVICES</div>
+    <div class="lob-box">
+
+      <!-- CHOICE: Host or Join -->
+      <div id="lob-choice">
+        <div style="font-size:6px;color:#3a4868;margin-bottom:14px">HOW DO YOU WANT TO PLAY?</div>
+        <button class="btn" id="b-lhost" style="width:100%;margin-bottom:8px">📡 CREATE ROOM (P1)</button>
+        <button class="btn" id="b-ljoinbtn" style="width:100%;margin-bottom:8px">🔗 JOIN ROOM (P2)</button>
+        <button class="btn y" id="b-lback" style="width:100%;font-size:7px">← BACK</button>
+      </div>
+
+      <!-- HOST: Waiting for P2 -->
+      <div id="lob-hosting" style="display:none">
+        <!-- Step A: pick custom code -->
+        <div id="lob-pick-code">
+          <div style="font-size:6px;color:#4878a8;margin-bottom:8px">SET YOUR ROOM CODE:</div>
+          <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px">
+            <input id="host-c1" class="code-box" maxlength="1" type="text">
+            <input id="host-c2" class="code-box" maxlength="1" type="text">
+            <input id="host-c3" class="code-box" maxlength="1" type="text">
+            <input id="host-c4" class="code-box" maxlength="1" type="text">
+          </div>
+          <div id="host-code-err" style="font-size:5px;color:#ff4444;height:10px;text-align:center;margin-bottom:6px"></div>
+          <button class="btn" id="b-lhconfirm" style="width:100%;margin-bottom:6px">✓ USE THIS CODE</button>
+          <button class="btn y" id="b-lhback" style="width:100%;font-size:7px">← BACK</button>
+        </div>
+        <!-- Step B: waiting for P2 -->
+        <div id="lob-waiting" style="display:none">
+          <div style="font-size:6px;color:#4878a8;margin-bottom:6px">YOUR ROOM CODE — SHARE WITH P2:</div>
+          <div class="lob-code" id="lobby-code">...</div>
+          <div id="lob-status" style="font-size:6px;color:#6878a0;margin:10px 0">⏳ WAITING FOR P2...</div>
+          <button class="btn y" id="b-lhcancel" style="width:100%;font-size:7px;margin-top:6px">← CANCEL</button>
+        </div>
+      </div>
+
+      <!-- JOIN: Enter code -->
+      <div id="lob-joining" style="display:none">
+        <div style="font-size:6px;color:#5868a0;margin-bottom:10px">ENTER ROOM CODE FROM P1:</div>
+        <div id="lob-input-row" style="display:flex;gap:6px;justify-content:center;margin-bottom:8px">
+          <input id="lob-c1" class="code-box" maxlength="1" type="text">
+          <input id="lob-c2" class="code-box" maxlength="1" type="text">
+          <input id="lob-c3" class="code-box" maxlength="1" type="text">
+          <input id="lob-c4" class="code-box" maxlength="1" type="text">
+        </div>
+        <div id="lob-err" style="font-size:5px;color:#ff4444;height:12px;text-align:center;margin-bottom:8px"></div>
+        <button class="btn" id="b-ljoin" style="width:100%;margin-bottom:6px">▶ CONNECT</button>
+        <button class="btn y" id="b-ljback" style="width:100%;font-size:7px">← BACK</button>
+      </div>
+
+      <!-- READY -->
+      <div id="lob-ready" style="display:none">
+        <div style="font-size:8px;color:#6ab0f0;margin-bottom:14px">✓ CONNECTED!</div>
+        <div class="lob-slots" style="margin-bottom:16px">
+          <div class="lob-slot"><div class="lob-sn" style="color:#7098c8">P1 WHITE</div><div class="lob-ss">WASD + SPACE</div></div>
+          <div class="lob-slot"><div class="lob-sn" style="color:#8870a8">P2 BLACK</div><div class="lob-ss">ARROWS + ENTER</div></div>
+        </div>
+        <div id="lob-ready-role" style="font-size:6px;color:#6ab0f0;margin-bottom:12px"></div>
+        <button class="btn" id="b-lstart" style="width:100%;margin-bottom:6px">▶ START BATTLE</button>
+        <button class="btn y" id="b-lrback" style="width:100%;font-size:7px">← CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="s-load" class="screen">
+    <div class="lt">LOADING...</div>
+    <div class="lb-o"><div class="lb-i" id="lbi"></div></div>
+    <div class="lm" id="lmsg">INIT</div>
+  </div>
+
+  <!-- MATCH -->
+  <div id="s-match" class="screen">
+    <div id="hud">
+      <div class="hf">
+        <div class="hn p1" id="hn-p1">★ P1 (WHITE)</div>
+        <div class="br"><span class="bl">HP</span><div class="bo"><div class="bi" id="b1h" style="width:100%;background:#1a3010"></div></div></div>
+        <div class="br"><span class="bl">SH</span><div class="bo"><div class="bi" id="b1s" style="width:100%;background:#181820"></div></div></div>
+      </div>
+      <div class="hud-c">
+        <div class="phl" id="phl" style="color:#5888c0">♟ CHESS</div>
+        <div class="td" id="tmd">60</div>
+        <div class="turn-ind" id="turn-ind">WHITE TO MOVE</div>
+      </div>
+      <div class="hf r">
+        <div class="hn p2" style="text-align:right" id="hn-p2">P2 (BLACK) ★</div>
+        <div class="br"><span class="bl">HP</span><div class="bo"><div class="bi" id="b2h" style="width:100%;background:#301010"></div></div></div>
+        <div class="br"><span class="bl">SH</span><div class="bo"><div class="bi" id="b2s" style="width:100%;background:#181820"></div></div></div>
+      </div>
+    </div>
+
+    <div id="play">
+      <div id="ca">
+        <div id="cc">
+          <div class="clbl" style="color:#3a4870" id="blk-lbl">▼ BLACK (P2)</div>
+          <div id="cinfo"></div>
+          <div id="cturn"></div>
+          <div id="chess-wrap">
+            <div id="cbw">
+              <div class="ranks" id="rkl"></div>
+              <div id="cb"></div>
+              <div class="files" id="fll"></div>
+            </div>
+            <div id="move-log">
+              <div class="ml-head">MOVES</div>
+            </div>
+          </div>
+          <div class="clbl" style="color:#3a4870" id="wht-lbl">▲ WHITE (P1)</div>
+          <button class="btn" id="b-forfeit" style="margin-top:8px;width:200px;font-size:7px;padding:8px 0;color:#804040;">⚑ FORFEIT GAME</button>
+        </div>
+      </div>
+
+      <div id="ba">
+        <canvas id="bc"></canvas>
+        <div id="ctrl-hint">P1: WASD move · SPACE fire &nbsp;|&nbsp; P2: ARROW KEYS move · ENTER fire &nbsp;|&nbsp; Tanks face direction of travel — fire shoots forward</div>
+      </div>
+
+      <div id="ov">
+        <!-- Pixel art win/lose board decoration -->
+        <div id="ov-board"></div>
+        <div id="ov-result">YOU WIN!</div>
+        <div id="ov-sub" class="os"></div>
+        <button class="btn" id="b-rematch" style="margin-top:14px">▶ REMATCH</button>
+        <button class="btn y" id="b-mm">← MAIN MENU</button>
+      </div>
+      <div id="pf"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+let _netSeed=0;
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const rnd=(a,b)=>Math.random()*(b-a)+a;
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const TAU=Math.PI*2;
+const lerp=(a,b,t)=>a+(b-a)*t;
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');}
+function loading(cb){
+  show('s-load');
+  let p=0,mi=0;
+  const msgs=['DEPLOYING TANKS','SETTING UP BOARD','LOADING MAP','READY!'];
+  const iv=setInterval(()=>{
+    p=Math.min(100,p+ri(18,28));
+    $('lbi').style.width=p+'%';
+    $('lmsg').textContent=msgs[Math.min(mi++,msgs.length-1)];
+    if(p>=100){clearInterval(iv);setTimeout(cb,160);}
+  },90);
+}
+
+
+// ════════════════════════════════════════════════════════════
+// SOUND ENGINE — Web Audio API procedural sounds
+// ════════════════════════════════════════════════════════════
+const Snd=(()=>{
+  let ctx=null;
+  function ac(){
+    if(!ctx) ctx=new(window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }
+  function osc(freq,type,vol,att,dec,t){
+    const c=ac(),g=c.createGain(),o=c.createOscillator();
+    o.type=type; o.frequency.setValueAtTime(freq,c.currentTime);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(vol,c.currentTime+att);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+att+dec);
+    o.connect(g); g.connect(c.destination);
+    o.start(c.currentTime+(t||0)); o.stop(c.currentTime+(t||0)+att+dec+0.05);
+  }
+  function noise(vol,dur,freq1,freq2){
+    try{
+      const c=ac(),bufSize=Math.floor(c.sampleRate*dur);
+      const buf=c.createBuffer(1,bufSize,c.sampleRate);
+      const d=buf.getChannelData(0);
+      for(let i=0;i<bufSize;i++) d[i]=(Math.random()*2-1);
+      const src=c.createBufferSource(); src.buffer=buf;
+      const f=c.createBiquadFilter(); f.type='bandpass';
+      f.frequency.setValueAtTime(freq1,c.currentTime);
+      if(freq2) f.frequency.exponentialRampToValueAtTime(freq2,c.currentTime+dur);
+      f.Q.value=1.5;
+      const g=c.createGain();
+      g.gain.setValueAtTime(vol,c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
+      src.connect(f); f.connect(g); g.connect(c.destination);
+      src.start(); src.stop(c.currentTime+dur+0.05);
+    }catch(e){}
+  }
+  return{
+    move(){ try{ osc(440,'sine',0.12,0.005,0.08); osc(660,'sine',0.06,0.005,0.05,0.03); }catch(e){} },
+    capture(){ try{ osc(200,'sawtooth',0.15,0.005,0.12); noise(0.18,0.12,300,80); }catch(e){} },
+    check(){ try{ osc(880,'square',0.1,0.005,0.08); osc(1100,'square',0.08,0.005,0.07,0.06); osc(660,'square',0.06,0.005,0.1,0.12); }catch(e){} },
+    stalemate(){ try{ osc(300,'sine',0.1,0.01,0.3); osc(280,'sine',0.08,0.01,0.3,0.1); osc(260,'sine',0.06,0.01,0.3,0.2); }catch(e){} },
+    checkmate(){ try{ osc(220,'sawtooth',0.18,0.01,0.4); osc(165,'sawtooth',0.14,0.01,0.4,0.15); noise(0.12,0.3,200,50); }catch(e){} },
+    shoot(){ try{ const c=ac(),g=c.createGain(),o=c.createOscillator(); o.type='sawtooth'; o.frequency.setValueAtTime(180,c.currentTime); o.frequency.exponentialRampToValueAtTime(40,c.currentTime+0.12); g.gain.setValueAtTime(0.22,c.currentTime); g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.15); o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+0.18); noise(0.15,0.08,800,200); }catch(e){} },
+    explode(){ try{ noise(0.35,0.5,400,30); osc(60,'sine',0.25,0.005,0.4); }catch(e){} },
+    hit(){ try{ noise(0.2,0.15,600,150); osc(100,'sine',0.12,0.005,0.12); }catch(e){} },
+    tankBonus(){ try{ osc(523,'sine',0.12,0.01,0.12); osc(659,'sine',0.12,0.01,0.12,0.1); osc(784,'sine',0.15,0.01,0.2,0.2); }catch(e){} },
+  };
+})();
+
+// ═══════════════════════════════════════════════
+//  CHESS ENGINE — full legal-move implementation
+// ═══════════════════════════════════════════════
+const Chess=(()=>{
+  const INIT=[
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+  ];
+  let board,turn,sel,poss,cr,ep,mated,inchk,vsBot,onMate,p1IsWhite=true;
+  let moveHistory=[]; // [{w:'e4',b:'e5'}, ...]
+  let flashCells=new Set(); // visual indices currently animating
+
+  const isW=p=>p&&p===p.toUpperCase()&&p!=='';
+  const isB=p=>p&&p===p.toLowerCase()&&p!=='';
+  const side=p=>isW(p)?'W':isB(p)?'B':null;
+  const opp=s=>s==='W'?'B':'W';
+  const enemy=(p,s)=>s==='W'?isB(p):isW(p);
+  const ib=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
+
+  function rawMoves(b,r,c,cR,epT){
+    const p=b[r][c]; if(!p) return [];
+    const s=side(p), pt=p.toUpperCase(), ms=[], dir=s==='W'?-1:1;
+    const slide=(dr,dc)=>{
+      let nr=r+dr,nc=c+dc;
+      while(ib(nr,nc)){
+        if(!b[nr][nc]){ms.push([nr,nc]);nr+=dr;nc+=dc;}
+        else{if(enemy(b[nr][nc],s))ms.push([nr,nc]);break;}
+      }
+    };
+    if(pt==='P'){
+      const sr=s==='W'?6:1;
+      if(ib(r+dir,c)&&!b[r+dir][c]){
+        ms.push([r+dir,c]);
+        if(r===sr&&!b[r+2*dir][c]) ms.push([r+2*dir,c]);
+      }
+      for(const dc of[-1,1]){
+        if(!ib(r+dir,c+dc)) continue;
+        if(enemy(b[r+dir][c+dc],s)) ms.push([r+dir,c+dc]);
+        if(epT&&epT[0]===r+dir&&epT[1]===c+dc) ms.push([r+dir,c+dc]);
+      }
+    }
+    if(pt==='R'||pt==='Q') [[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>slide(a,b));
+    if(pt==='B'||pt==='Q') [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([a,b])=>slide(a,b));
+    if(pt==='N'){
+      [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>{
+        const nr=r+dr,nc=c+dc;
+        if(ib(nr,nc)&&side(b[nr][nc])!==s) ms.push([nr,nc]);
+      });
+    }
+    if(pt==='K'){
+      for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){
+        if(!dr&&!dc) continue;
+        const nr=r+dr,nc=c+dc;
+        if(ib(nr,nc)&&side(b[nr][nc])!==s) ms.push([nr,nc]);
+      }
+      const br=s==='W'?7:0;
+      const wk=s==='W'?cR.wK:cR.bK, wq=s==='W'?cR.wQ:cR.bQ;
+      const R=s==='W'?'R':'r';
+      if(r===br&&c===4){
+        if(wk&&!b[br][5]&&!b[br][6]&&b[br][7]===R) ms.push([br,6]);
+        if(wq&&!b[br][3]&&!b[br][2]&&!b[br][1]&&b[br][0]===R) ms.push([br,2]);
+      }
+    }
+    return ms;
+  }
+
+  function applyMove(b,fr,fc,tr,tc,cR,epT){
+    const nb=b.map(r=>[...r]);
+    const p=nb[fr][fc], pt=p.toUpperCase(), s=side(p), br=s==='W'?7:0;
+    let nep=null;
+    // En passant capture
+    if(pt==='P'&&epT&&tr===epT[0]&&tc===epT[1]) nb[fr][tc]='';
+    // Double pawn push
+    if(pt==='P'&&Math.abs(tr-fr)===2) nep=[(fr+tr)/2,tc];
+    nb[tr][tc]=p; nb[fr][fc]='';
+    // Promotion
+    if(pt==='P'&&(tr===0||tr===7)) nb[tr][tc]=s==='W'?'Q':'q';
+    // Castling rook move
+    if(pt==='K'&&Math.abs(tc-fc)===2){
+      if(tc===6){nb[br][5]=nb[br][7];nb[br][7]='';}
+      else      {nb[br][3]=nb[br][0];nb[br][0]='';}
+    }
+    const nc={...cR};
+    if(p==='K'){nc.wK=nc.wQ=false;} if(p==='k'){nc.bK=nc.bQ=false;}
+    if(fr===7&&fc===7) nc.wK=false; if(fr===7&&fc===0) nc.wQ=false;
+    if(fr===0&&fc===7) nc.bK=false; if(fr===0&&fc===0) nc.bQ=false;
+    return{board:nb,cr:nc,ep:nep};
+  }
+
+  function findKing(b,s){
+    const K=s==='W'?'K':'k';
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++) if(b[r][c]===K) return[r,c];
+    return[0,0];
+  }
+
+  function squareAttacked(b,r,c,byS,cR,epT){
+    for(let fr=0;fr<8;fr++) for(let fc=0;fc<8;fc++){
+      if(side(b[fr][fc])!==byS) continue;
+      if(rawMoves(b,fr,fc,cR,epT).some(([mr,mc])=>mr===r&&mc===c)) return true;
+    }
+    return false;
+  }
+
+  function legalMoves(b,r,c,s,cR,epT){
+    return rawMoves(b,r,c,cR,epT).filter(([tr,tc])=>{
+      const{board:nb,cr:nc,ep:ne}=applyMove(b,r,c,tr,tc,cR,epT);
+      const k=findKing(nb,s);
+      return !squareAttacked(nb,k[0],k[1],opp(s),nc,ne);
+    });
+  }
+
+  function hasAnyLegal(b,s,cR,epT){
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++)
+      if(side(b[r][c])===s&&legalMoves(b,r,c,s,cR,epT).length) return true;
+    return false;
+  }
+
+
+  const FILES='abcdefgh';
+  const PIECE_NAME={P:'Pawn',N:'Knight',B:'Bishop',R:'Rook',Q:'Queen',K:'King',
+                    p:'Pawn',n:'Knight',b:'Bishop',r:'Rook',q:'Queen',k:'King'};
+  function toNote(piece,fr,fc,tr,tc,captured){
+    if(!piece) return '?';
+    const name=PIECE_NAME[piece]||'?';
+    const destFile=FILES[tc];
+    const destRank=(8-tr);
+    const action=captured?'takes':'to';
+    // Special: castling
+    if(piece==='K'||piece==='k'){
+      if(Math.abs(fc-tc)===2) return fc<tc?'Castle K-side':'Castle Q-side';
+    }
+    // Pawn promotion (landed on rank 1 or 8)
+    const promoted=(piece==='P'&&tr===0)||(piece==='p'&&tr===7);
+    const suffix=promoted?'=Q':'';
+    return name+' '+action+' '+destFile+destRank+suffix;
+  }
+  function logMove(fr,fc,tr,tc,cap,sideWhoMoved,piece){
+    const note=toNote(piece,fr,fc,tr,tc,cap);
+    if(sideWhoMoved==='W'){
+      moveHistory.push({w:note,b:''});
+    } else {
+      if(moveHistory.length&&moveHistory[moveHistory.length-1].b===''){
+        moveHistory[moveHistory.length-1].b=note;
+      } else {
+        moveHistory.push({w:'...',b:note});
+      }
+    }
+    renderLog();
+  }
+  function renderLog(){
+    const log=document.getElementById('move-log');
+    if(!log) return;
+    log.innerHTML='<div class="ml-head">MOVES</div>';
+    moveHistory.forEach((row,i)=>{
+      const isLast=i===moveHistory.length-1;
+      const d=document.createElement('div');
+      d.className='ml-row'+(isLast?' ml-last':'');
+      d.innerHTML='<span class="ml-n">'+(i+1)+'</span>'
+        +'<div class="ml-moves">'
+        +'<div class="ml-w'+(isLast?' ml-hi':'')+'">'+(row.w||'')+'</div>'
+        +(row.b?'<div class="ml-b'+(isLast?' ml-hi':'')+'">'+(row.b)+'</div>':'')
+        +'</div>';
+      log.appendChild(d);
+    });
+    log.scrollTop=log.scrollHeight;
+  }
+  function doMove(fr,fc,tr,tc){
+    const captured=board[tr][tc];
+    const _movePiece=board[fr][fc]; // save piece BEFORE board updates
+    const _moveSide=turn;
+    const{board:nb,cr:nc,ep:ne}=applyMove(board,fr,fc,tr,tc,cr,ep);
+    board=nb; cr=nc; ep=ne;
+    turn=opp(turn); sel=null; poss=[];
+    logMove(fr,fc,tr,tc,captured,_moveSide,_movePiece);
+    const k=findKing(board,turn);
+    inchk=squareAttacked(board,k[0],k[1],opp(turn),cr,ep);
+    if(!hasAnyLegal(board,turn,cr,ep)){
+      mated=true;
+      if(inchk){
+        if(onMate) onMate(turn==='W'?'BLACK':'WHITE'); // checkmate — opposite side wins
+      } else {
+        if(onMate) onMate('STALEMATE'); // stalemate — draw
+      }
+    }
+    // Sound feedback
+    if(mated && inchk) Snd.checkmate();
+    else if(mated) Snd.stalemate();
+    else if(inchk) Snd.check();
+    else if(captured) Snd.capture();
+    else Snd.move();
+    render(); upd();
+    // Animate capture flash — added AFTER render so className isn't wiped
+    if(captured){
+      const vi=(!p1IsWhite)?(7-tr)*8+(7-tc):tr*8+tc;
+      const dc=$('cb').children[vi];
+      if(dc){
+        flashCells.add(vi);
+        dc.classList.add('cap-flash');
+        setTimeout(()=>{ dc.classList.remove('cap-flash'); flashCells.delete(vi); },380);
+      }
+    }
+    // Broadcast chess move to opponent
+    if(Net.isConnected()) Net.send({type:'chess',fr,fc,tr,tc});
+    if(vsBot&&turn===botSide()&&!mated&&!Match.getBonusSide()) setTimeout(botMove,480);
+  }
+
+  // ── STRONG BOT: Negamax + Alpha-Beta (depth 4) ──────────────────
+  // Piece values
+  const PV={P:100,N:320,B:330,R:500,Q:900,K:20000,p:100,n:320,b:330,r:500,q:900,k:20000};
+  // Piece-square tables (white perspective, flipped for black)
+  const PST={
+    P:[[ 0, 0, 0, 0, 0, 0, 0, 0],
+       [50,50,50,50,50,50,50,50],
+       [10,10,20,30,30,20,10,10],
+       [ 5, 5,10,25,25,10, 5, 5],
+       [ 0, 0, 0,20,20, 0, 0, 0],
+       [ 5,-5,-10, 0, 0,-10,-5, 5],
+       [ 5,10,10,-20,-20,10,10, 5],
+       [ 0, 0, 0, 0, 0, 0, 0, 0]],
+    N:[[-50,-40,-30,-30,-30,-30,-40,-50],
+       [-40,-20,  0,  0,  0,  0,-20,-40],
+       [-30,  0, 10, 15, 15, 10,  0,-30],
+       [-30,  5, 15, 20, 20, 15,  5,-30],
+       [-30,  0, 15, 20, 20, 15,  0,-30],
+       [-30,  5, 10, 15, 15, 10,  5,-30],
+       [-40,-20,  0,  5,  5,  0,-20,-40],
+       [-50,-40,-30,-30,-30,-30,-40,-50]],
+    B:[[-20,-10,-10,-10,-10,-10,-10,-20],
+       [-10,  0,  0,  0,  0,  0,  0,-10],
+       [-10,  0,  5, 10, 10,  5,  0,-10],
+       [-10,  5,  5, 10, 10,  5,  5,-10],
+       [-10,  0, 10, 10, 10, 10,  0,-10],
+       [-10, 10, 10, 10, 10, 10, 10,-10],
+       [-10,  5,  0,  0,  0,  0,  5,-10],
+       [-20,-10,-10,-10,-10,-10,-10,-20]],
+    R:[[ 0, 0, 0, 0, 0, 0, 0, 0],
+       [ 5,10,10,10,10,10,10, 5],
+       [-5, 0, 0, 0, 0, 0, 0,-5],
+       [-5, 0, 0, 0, 0, 0, 0,-5],
+       [-5, 0, 0, 0, 0, 0, 0,-5],
+       [-5, 0, 0, 0, 0, 0, 0,-5],
+       [-5, 0, 0, 0, 0, 0, 0,-5],
+       [ 0, 0, 0, 5, 5, 0, 0, 0]],
+    Q:[[-20,-10,-10, -5, -5,-10,-10,-20],
+       [-10,  0,  0,  0,  0,  0,  0,-10],
+       [-10,  0,  5,  5,  5,  5,  0,-10],
+       [ -5,  0,  5,  5,  5,  5,  0, -5],
+       [  0,  0,  5,  5,  5,  5,  0, -5],
+       [-10,  5,  5,  5,  5,  5,  0,-10],
+       [-10,  0,  5,  0,  0,  0,  0,-10],
+       [-20,-10,-10, -5, -5,-10,-10,-20]],
+    K:[[-30,-40,-40,-50,-50,-40,-40,-30],
+       [-30,-40,-40,-50,-50,-40,-40,-30],
+       [-30,-40,-40,-50,-50,-40,-40,-30],
+       [-30,-40,-40,-50,-50,-40,-40,-30],
+       [-20,-30,-30,-40,-40,-30,-30,-20],
+       [-10,-20,-20,-20,-20,-20,-20,-10],
+       [ 20, 20,  0,  0,  0,  0, 20, 20],
+       [ 20, 30, 10,  0,  0, 10, 30, 20]],
+  };
+
+  function pstScore(p,r,c){
+    const pt=p.toUpperCase();
+    if(!PST[pt]) return 0;
+    const row=isW(p)?r:7-r; // flip for black
+    return PST[pt][row][c]*(isW(p)?1:-1);
+  }
+
+  function evalBoard(b,cR,epT){
+    let score=0;
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+      const p=b[r][c]; if(!p) continue;
+      const v=PV[p]||0;
+      score+=(isW(p)?-1:1)*(v + pstScore(p,r,c));
+      // mobility bonus
+    }
+    return score; // positive = good for black
+  }
+
+  // Move ordering: captures first (MVV-LVA), then by PST
+  function orderMoves(b,moves){
+    return moves.map(m=>{
+      const cap=b[m.tr][m.tc];
+      const capVal=cap?(PV[cap]||0):0;
+      const movingVal=PV[b[m.fr][m.fc]]||0;
+      return{...m, ord: capVal*10 - movingVal/100};
+    }).sort((a,z)=>z.ord-a.ord);
+  }
+
+  let botAbort=false;
+  function negamax(b,s,depth,alpha,beta,cR,epT){
+    if(depth===0) return (s===botSide()?1:-1)*evalBoard(b,cR,epT);
+    const moves=[];
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++)
+      if(side(b[r][c])===s)
+        legalMoves(b,r,c,s,cR,epT).forEach(([tr,tc])=>moves.push({fr:r,fc:c,tr,tc}));
+    if(!moves.length){
+      const k=findKing(b,s);
+      return squareAttacked(b,k[0],k[1],opp(s),cR,epT)?-100000+depth:0;
+    }
+    const ordered=orderMoves(b,moves);
+    let best=-Infinity;
+    for(const m of ordered){
+      if(botAbort) return best;
+      const{board:nb,cr:nc,ep:ne}=applyMove(b,m.fr,m.fc,m.tr,m.tc,cR,epT);
+      const sc=-negamax(nb,opp(s),depth-1,-beta,-alpha,nc,ne);
+      if(sc>best) best=sc;
+      if(best>alpha) alpha=best;
+      if(alpha>=beta) break; // cutoff
+    }
+    return best;
+  }
+
+  const botSide=()=>p1IsWhite?'B':'W';
+
+  function botMove(){
+    const bs=botSide();
+    if(turn!==bs) return;
+    if(!Match.chessOk) return; // don't run during tanks phase
+    botAbort=false;
+    const moves=[];
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++)
+      if(side(board[r][c])===bs)
+        legalMoves(board,r,c,bs,cr,ep).forEach(([tr,tc])=>moves.push({fr:r,fc:c,tr,tc}));
+    if(!moves.length) return;
+
+    // Iterative deepening: try depth 1,2,3,4
+    let bestMove=moves[ri(0,moves.length-1)];
+    const ordered=orderMoves(board,moves);
+    const startT=Date.now();
+    for(let depth=1;depth<=4;depth++){
+      let best=-Infinity, alpha=-Infinity, beta=Infinity;
+      let depthBest=null;
+      for(const m of ordered){
+        const{board:nb,cr:nc,ep:ne}=applyMove(board,m.fr,m.fc,m.tr,m.tc,cr,ep);
+        const sc=-negamax(nb,opp(bs),depth-1,-beta,-alpha,nc,ne);
+        if(sc>best){best=sc;depthBest=m;}
+        if(sc>alpha) alpha=sc;
+      }
+      if(depthBest) bestMove=depthBest;
+      if(Date.now()-startT>300) break; // time limit
+    }
+    doMove(bestMove.fr,bestMove.fc,bestMove.tr,bestMove.tc);
+  }
+
+  const G={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
+
+  let _dragSrc=null;
+
+  function buildDOM(){
+    const flip=!p1IsWhite; // flip=true when P1 plays Black (opponent White on top)
+    const el=$('cb'); el.innerHTML='';
+    for(let vi=0;vi<64;vi++){
+      // Visual index → board coords
+      const vr=Math.floor(vi/8), vc=vi%8;
+      const br=flip?7-vr:vr, bc=flip?7-vc:vc;
+      const d=document.createElement('div');
+      // Square color: a1 (bottom-left from P1's view) is always dark when flip=false
+      // Use board coords for consistent coloring
+      d.className='cc '+((br+bc)%2===0?'lt':'dk');
+      d.onclick=(()=>{const rr=br,cc=bc;return()=>{if(!_dragSrc)click(rr,cc);};})();
+      d.addEventListener('mousedown',(()=>{const rr=br,cc=bc;return e=>{if(e.button===0)startDrag(rr,cc,e.clientX,e.clientY);};})());
+      d.addEventListener('touchstart',(()=>{const rr=br,cc=bc;return e=>{startDrag(rr,cc,e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();};})(),{passive:false});
+      el.appendChild(d);
+    }
+    // Rank labels: top row shows rank 8 for White's view, rank 1 for Black's view
+    const rl=$('rkl'); rl.innerHTML='';
+    for(let vr=0;vr<8;vr++){
+      const d=document.createElement('div'); d.className='rk';
+      d.textContent=flip?vr+1:8-vr; rl.appendChild(d);
+    }
+    // File labels: a-h left→right for White, h-a for Black
+    const fl=$('fll'); fl.innerHTML='';
+    for(const l of (flip?'hgfedcba':'abcdefgh')){
+      const d=document.createElement('div'); d.className='fl'; d.textContent=l; fl.appendChild(d);
+    }
+  }
+
+  function cellFromPoint(px,py){
+    const rect=$('cb').getBoundingClientRect();
+    const x=px-rect.left, y=py-rect.top;
+    let vr=Math.floor(y/(rect.height/8)), vc=Math.floor(x/(rect.width/8));
+    if(vr<0||vr>7||vc<0||vc>7) return null;
+    // Convert visual position → board position
+    const flip=!p1IsWhite;
+    return flip?[7-vr,7-vc]:[vr,vc];
+  }
+
+  function startDrag(r,c,ex,ey){
+    if(mated||!Match.chessOk) return;
+    const bonus=Match.getBonusSide(), myS=bonus||turn;
+    const _p1s=p1IsWhite?'W':'B',_p2s=p1IsWhite?'B':'W';
+    if(!bonus&&vsBot&&turn===_p2s) return;
+    if(Net.isConnected()&&!bonus){
+      if( Net.getIsHost()&&turn!==_p1s) return;
+      if(!Net.getIsHost()&&turn!==_p2s) return;
+    }
+    const p=board[r][c];
+    if(!p||side(p)!==myS) return;
+    click(r,c); // select piece
+    _dragSrc=[r,c];
+    const ghost=$('drag-ghost');
+    ghost.textContent=G[p]; ghost.style.color=isW(p)?'#fffff0':'#1a0a00';
+    ghost.style.left=ex+'px'; ghost.style.top=ey+'px'; ghost.style.display='block';
+
+    function moveGhost(mx,my){
+      ghost.style.left=mx+'px'; ghost.style.top=my+'px';
+      document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+      const cell=cellFromPoint(mx,my);
+      if(cell) $('cb').children[cell[0]*8+cell[1]].classList.add('drag-over');
+    }
+    function endDrag(ux,uy){
+      ghost.style.display='none';
+      document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+      window.removeEventListener('mousemove',mm); window.removeEventListener('mouseup',mu);
+      window.removeEventListener('touchmove',tm); window.removeEventListener('touchend',tu);
+      const tgt=cellFromPoint(ux,uy);
+      const src=_dragSrc; _dragSrc=null;
+      if(tgt&&src&&!(tgt[0]===src[0]&&tgt[1]===src[1])) click(tgt[0],tgt[1]);
+      else if(!tgt){ sel=null; poss=[]; render(); }
+    }
+    const mm=e=>moveGhost(e.clientX,e.clientY);
+    const mu=e=>endDrag(e.clientX,e.clientY);
+    const tm=e=>{e.preventDefault();moveGhost(e.touches[0].clientX,e.touches[0].clientY);};
+    const tu=e=>endDrag(e.changedTouches[0].clientX,e.changedTouches[0].clientY);
+    window.addEventListener('mousemove',mm); window.addEventListener('mouseup',mu);
+    window.addEventListener('touchmove',tm,{passive:false}); window.addEventListener('touchend',tu);
+  }
+
+  function render(){
+    const cells=$('cb').children;
+    const k=findKing(board,turn);
+    const flip=!p1IsWhite;
+    for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+      // Board [r][c] → visual cell index
+      const vi=flip?(7-r)*8+(7-c):r*8+c;
+      const d=cells[vi];
+      if(!d) continue;
+      const p=board[r][c];
+      if(p&&G[p]){
+        d.textContent=G[p];
+        d.style.color=isW(p)?'#fffff0':'#1a0a00';
+        d.style.textShadow=isW(p)
+          ?'0 1px 3px rgba(0,0,0,0.8),0 0 1px #000'
+          :'0 1px 2px rgba(255,255,255,0.15)';
+      } else {
+        d.textContent=''; d.style.color=''; d.style.textShadow='';
+      }
+      let cls='cc '+((r+c)%2===0?'lt':'dk');
+      if(sel&&sel[0]===r&&sel[1]===c) cls+=' sel';
+      else if(poss.some(([a,b])=>a===r&&b===c)) cls+=' pos';
+      else if(inchk&&k&&k[0]===r&&k[1]===c) cls+=' chk';
+      if(!flashCells.has(vi)) d.className=cls;
+    }
+  }
+
+  function click(r,c){
+    if(mated||!Match.chessOk) return;
+    const bonus=Match.getBonusSide();
+    const myS = bonus || turn;
+    const p1S=p1IsWhite?'W':'B', p2S=p1IsWhite?'B':'W';
+    if(!bonus && vsBot && turn===p2S) return;
+    if(Net.isConnected() && !bonus){
+      if( Net.getIsHost() && turn!==p1S) return;
+      if(!Net.getIsHost() && turn!==p2S) return;
+    }
+    if(sel&&poss.some(([a,b])=>a===r&&b===c)){
+      doMove(sel[0],sel[1],r,c);
+      if(bonus){
+        Match.clearBonus();
+        setTimeout(kickBotIfNeeded,200); // kick bot after bonus consumed
+      }
+      return;
+    }
+    const clickSide=board[r][c]?side(board[r][c]):null;
+    if(clickSide===myS){
+      sel=[r,c]; poss=legalMoves(board,r,c,myS,cr,ep); render();
+    } else {
+      sel=null; poss=[]; render();
+    }
+  }
+
+  function upd(){
+    const tn=turn==='W'?'WHITE':'BLACK';
+    const bonus=Match.getBonusSide();
+    const bn=bonus==='W'?'WHITE':bonus==='B'?'BLACK':null;
+    $('cturn').textContent=bn?(bn+' BONUS MOVE!'):tn+"'S TURN";
+    $('cturn').style.color=bn?'#c8b060':(turn==='W'?'#b8b8d0':'#707090');
+    $('cinfo').textContent=mated?(inchk?'CHECKMATE!':'STALEMATE — DRAW!'):bn?'★ TANK WIN — MOVE ANY PIECE!':inchk?'⚠ CHECK — '+tn+' must move':'CLICK A PIECE TO MOVE';
+    $('cinfo').style.color=mated?'#c84040':bn?'#c8b060':inchk?'#c06020':'#2a3858';
+    $('turn-ind').textContent=bn?('★ '+bn+' EARNED A MOVE'):tn+' TO MOVE';
+    $('turn-ind').style.color=bn?'#c8b060':'#2a3858';
+    // blk-lbl is the TOP label in HTML, wht-lbl is the BOTTOM label
+    // Opponent always on top, P1 always on bottom
+    const _oppColor=p1IsWhite?'BLACK':'WHITE';
+    const _oppName=vsBot?'BOT':(p1IsWhite?'P2':'P1');
+    const _p1color=p1IsWhite?'WHITE':'BLACK';
+    const _blk=$('blk-lbl'); if(_blk) _blk.textContent='▲ '+_oppColor+' ('+_oppName+')';
+    const _wht=$('wht-lbl'); if(_wht) _wht.textContent='▼ '+_p1color+' (P1)';
+  }
+
+  function init(bot,mateCb,p1White=true){
+    p1IsWhite=p1White;
+    board=INIT.map(r=>[...r]);
+    turn='W'; sel=null; poss=[];
+    cr={wK:true,wQ:true,bK:true,bQ:true}; ep=null;
+    mated=false; inchk=false; vsBot=bot; onMate=mateCb;
+    moveHistory=[]; renderLog();
+    buildDOM(); render(); upd();
+  }
+
+  function triggerBotBonus(){
+    if(mated) return;
+    turn=botSide(); // bot plays its assigned side
+    setTimeout(botMove, 200);
+  }
+  function kickBotIfNeeded(){
+    if(vsBot && turn===botSide() && !mated) setTimeout(botMove, 300);
+  }
+  function applyNetMove(fr,fc,tr,tc){
+    // Apply opponent's chess move received over network
+    if(mated) return;
+    doMove(fr,fc,tr,tc);
+  }
+  function forceTurn(s){ turn=s; sel=null; poss=[]; render(); upd(); }
+  return{init,render,upd,refreshUpd:()=>upd(),triggerBotBonus,kickBotIfNeeded,applyNetMove,getP1IsWhite:()=>p1IsWhite,getBotSide:()=>botSide(),forceTurn};
+})();
+
+// ═══════════════════════════════════════════════
+//  TANKS ENGINE — Tiny Tanks style, top-down
+// ═══════════════════════════════════════════════
+const Tanks=(()=>{
+  const cv=$('bc');
+  const cx=cv.getContext('2d');
+  let W,H,on=false,raf=null,vsBot,onWin;
+
+  //──────────────────────────────────────────────
+  // MAP (T=36px)
+  //──────────────────────────────────────────────
+  const T=20;
+  const ALL_MAPS=[
+    // 0 — The Board
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#...##......##......##......##.......#',
+     '#....................................#',
+     '#....................................#',
+     '#......BB.................BB.........#',
+     '#....................................#',
+     '#...##......##......##......##.......#',
+     '#....................................#',
+     '#....................................#',
+     '#......BB.................BB.........#',
+     '#....................................#',
+     '#....................................#',
+     '#......BB.................BB.........#',
+     '#....................................#',
+     '#....................................#',
+     '#...##......##......##......##.......#',
+     '#....................................#',
+     '#....................................#',
+     '#......BB.................BB.........#',
+     '#....................................#',
+     '#...##......##......##......##.......#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 1 — Pawn Storm
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#.BB..BB..BB..BB..BB..BB..BB..BB.....#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#..............##....##..............#',
+     '#..............##....##..............#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#.BB..BB..BB..BB..BB..BB..BB..BB.....#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 2 — Castle Siege
+    [
+     '######################################',
+     '#....................................#',
+     '#.##.##...........................##.#',
+     '#.##.##...........................##.#',
+     '#....................................#',
+     '#......##..........................###',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#...........BB..........BB...........#',
+     '#....................................#',
+     '#....................................#',
+     '#...........BB..........BB...........#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#......##..........................###',
+     '#....................................#',
+     '#.##.##...........................##.#',
+     '#.##.##...........................##.#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 3 — Knights Tour
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#.....##.............................#',
+     '#.....##.............................#',
+     '#....................................#',
+     '#............##......................#',
+     '#............##......................#',
+     '#....................................#',
+     '#.......................##...........#',
+     '#.......................##...........#',
+     '#....................................#',
+     '#..........BB.............BB.........#',
+     '#....................................#',
+     '#.......................##...........#',
+     '#.......................##...........#',
+     '#....................................#',
+     '#............##......................#',
+     '#............##......................#',
+     '#....................................#',
+     '#.....##.............................#',
+     '#.....##.............................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 4 — Bishop Diagonals
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#...##.......................##......#',
+     '#....................................#',
+     '#......##.................##.........#',
+     '#....................................#',
+     '#.........BB...........BB............#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#..............BB....BB..............#',
+     '#....................................#',
+     '#....................................#',
+     '#..............BB....BB..............#',
+     '#....................................#',
+     '#....................................#',
+     '#.........BB...........BB............#',
+     '#....................................#',
+     '#......##.................##.........#',
+     '#....................................#',
+     '#...##.......................##......#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 5 — Queens Gambit
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#.BB.........................BB......#',
+     '#....................................#',
+     '#....................................#',
+     '#....##.......BB.BB.......##.........#',
+     '#....................................#',
+     '#....................................#',
+     '#..............####..............#...#',
+     '#..............#..#..................#',
+     '#..............####..............#...#',
+     '#....................................#',
+     '#..............####..............#...#',
+     '#..............#..#..................#',
+     '#..............####..............#...#',
+     '#....................................#',
+     '#....................................#',
+     '#....##.......BB.BB.......##.........#',
+     '#....................................#',
+     '#....................................#',
+     '#.BB.........................BB......#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 6 — Endgame
+    [
+     '######################################',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#...BB...............................#',
+     '#...BB...............................#',
+     '#....................................#',
+     '#....................................#',
+     '#................##..................#',
+     '#................##..................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#................##..................#',
+     '#................##..................#',
+     '#....................................#',
+     '#....................................#',
+     '#...........................BB.......#',
+     '#...........................BB.......#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ],
+    // 7 — Kings Gambit
+    [
+     '######################################',
+     '#....................................#',
+     '#..####..............................#',
+     '#..#..#..............................#',
+     '#..####..............................#',
+     '#....................................#',
+     '#....................................#',
+     '#.........BB.................BB......#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '#.........BB.................BB......#',
+     '#....................................#',
+     '#....................................#',
+     '#...........................####.....#',
+     '#...........................#..#.....#',
+     '#...........................####.....#',
+     '#....................................#',
+     '#....................................#',
+     '#....................................#',
+     '######################################'
+    ]
+  ];
+  const MAPS=ALL_MAPS.map(m=>m.map(r=>r.slice(0,38).padEnd(38,'#')));
+  let curMap=0,mW=0,mH=0,tiles=[],brickHP={};
+
+  let mapDecos=[];  // [{x,y,type,seed}] decorations for current map
+
+  function buildMap(){
+    curMap= _netSeed>0 ? (_netSeed % MAPS.length) : ri(0,MAPS.length-1);
+    const src=MAPS[curMap];
+    mH=src.length; mW=src[0].length;
+    tiles=src.map(row=>row.split('').map(ch=>ch==='#'?1:ch==='B'?2:0));
+    brickHP={};
+    for(let r=0;r<mH;r++) for(let c=0;c<mW;c++)
+      if(tiles[r][c]===2) brickHP[r+','+c]=2;
+    texCache={};       // invalidate texture cache on new map
+    genDecos();
+  }
+
+  function genDecos(){
+    mapDecos=[];
+    // Per-map decoration type:
+    // 0=Meadow:tree 1=Desert:cactus 2=Autumn:tree 3=Snow:rock
+    // 4=Jungle:tree 5=Dusk:rock     6=Mud:rock    7=Savanna:tree
+    const decoType=['tree','cactus','tree','rock','tree','rock','rock','tree'][curMap]||'rock';
+    const rng=lcg(curMap*7919+42);
+    const count=18+Math.floor(rng()*10);
+    let tries=0;
+    while(mapDecos.length<count && tries<800){
+      tries++;
+      const c=1+Math.floor(rng()*(mW-2));
+      const r=1+Math.floor(rng()*(mH-2));
+      if(tiles[r][c]!==0) continue;
+      const x=c*T+T/2, y=r*T+T/2;
+      if(mapDecos.some(d=>Math.hypot(d.x-x,d.y-y)<T*2.2)) continue;
+      if(r<3&&c<3) continue;
+      if(r>mH-4&&c>mW-4) continue;
+      mapDecos.push({x,y,type:decoType,seed:Math.floor(rng()*9999)});
+    }
+  }
+
+  function drawDecos(){
+    const th=THEMES[curMap]||THEMES[0];
+    for(const d of mapDecos){
+      cx.save();
+      cx.translate(Math.round(d.x),Math.round(d.y));
+      if(d.type==='tree')   drawPixelTree(th,d.seed);
+      else if(d.type==='cactus') drawPixelCactus(th,d.seed);
+      else                  drawPixelRock(th,d.seed);
+      cx.restore();
+    }
+  }
+
+  function drawPixelTree(th,seed){
+    // HK: twisted mushroom / ancient root cluster
+    const v=seed%3;
+    // Dark ground shadow
+    cx.fillStyle='rgba(0,0,0,0.4)';
+    cx.fillRect(-7,4,14,5); cx.fillRect(-5,3,10,2);
+    // Stem/trunk — dark organic
+    cx.fillStyle='#2a1e10'; cx.fillRect(-2,0,4,7);
+    cx.fillStyle='#1a1008'; cx.fillRect(-2,0,1,7);
+    if(v===0){
+      // Big mushroom cap — pale sickly blue-grey (HK fungal)
+      cx.fillStyle='#183028'; cx.fillRect(-8,-3,16,7);
+      cx.fillStyle='#203c30'; cx.fillRect(-7,-6,14,6);
+      cx.fillStyle='#284a38'; cx.fillRect(-5,-8,10,5);
+      cx.fillStyle='#203c30'; cx.fillRect(-3,-9,6,3);
+      // Bioluminescent rim dots
+      cx.fillStyle='#406858'; cx.fillRect(-7,-3,2,2); cx.fillRect(4,-3,2,2);
+      cx.fillStyle='rgba(60,140,100,0.5)';
+      cx.fillRect(-6,-2,1,1); cx.fillRect(4,-4,1,1); cx.fillRect(0,-8,1,1);
+      // Spots on cap (pale)
+      cx.fillStyle='#305040'; cx.fillRect(-4,-7,2,2); cx.fillRect(1,-6,2,2);
+    } else if(v===1){
+      // Twisted dead tree — bare branches, void-dark
+      cx.fillStyle='#201810'; cx.fillRect(-4,-2,8,4);
+      cx.fillStyle='#181008'; cx.fillRect(-4,-2,1,4);
+      // Left branch
+      cx.fillStyle='#201810'; cx.fillRect(-9,-4,5,2); cx.fillRect(-9,-6,2,2);
+      // Right branch
+      cx.fillStyle='#201810'; cx.fillRect(3,-5,5,2); cx.fillRect(6,-7,2,3);
+      // Top wisp
+      cx.fillStyle='#181008'; cx.fillRect(-1,-9,2,3);
+      // Pale glow on tips (void/soul essence)
+      cx.fillStyle='rgba(100,80,180,0.4)';
+      cx.fillRect(-9,-6,2,1); cx.fillRect(6,-7,2,1); cx.fillRect(-1,-9,2,1);
+    } else {
+      // Spore cluster — round dark mounds with glow
+      cx.fillStyle='#182820'; cx.fillRect(-6,-2,12,6);
+      cx.fillStyle='#203828'; cx.fillRect(-5,-5,10,5);
+      cx.fillStyle='#284830'; cx.fillRect(-4,-7,8,4);
+      cx.fillStyle='#203828'; cx.fillRect(-2,-8,4,3);
+      // Spore glow — dim cyan-green
+      cx.fillStyle='rgba(40,120,80,0.5)';
+      cx.fillRect(-2,-7,2,2); cx.fillRect(1,-5,2,2);
+      cx.fillStyle='rgba(60,160,100,0.3)';
+      cx.fillRect(-1,-8,1,1); cx.fillRect(2,-6,1,1);
+    }
+  }
+
+  function drawPixelCactus(th,seed){
+    // HK: crystal/stalagmite formation
+    const v=seed%3;
+    cx.fillStyle='rgba(0,0,0,0.35)'; cx.fillRect(-5,3,10,4);
+    if(v===0){
+      // Tall crystal cluster — icy blue-grey
+      cx.fillStyle='#2a3848'; cx.fillRect(-2,-10,4,13);
+      cx.fillStyle='#3a4c60'; cx.fillRect(-1,-9,2,11);
+      cx.fillStyle='#4a6070'; cx.fillRect(-1,-7,1,5);
+      // Side crystals
+      cx.fillStyle='#243040'; cx.fillRect(-5,-5,3,8); cx.fillRect(2,-6,3,9);
+      cx.fillStyle='#344858'; cx.fillRect(-4,-4,1,6); cx.fillRect(3,-5,1,7);
+      // Glowing tips
+      cx.fillStyle='rgba(80,140,200,0.6)';
+      cx.fillRect(-2,-10,4,2); cx.fillRect(-5,-5,3,1); cx.fillRect(2,-6,3,1);
+    } else if(v===1){
+      // Void crystal — deep purple
+      cx.fillStyle='#20183c'; cx.fillRect(-3,-12,5,15);
+      cx.fillStyle='#302450'; cx.fillRect(-2,-11,3,13);
+      cx.fillStyle='#402e60'; cx.fillRect(-1,-9,1,6);
+      cx.fillStyle='#20183c'; cx.fillRect(2,-7,4,9); cx.fillRect(3,-9,3,3);
+      cx.fillStyle='rgba(120,80,200,0.6)';
+      cx.fillRect(-3,-12,5,2); cx.fillRect(2,-7,4,1);
+    } else {
+      // Geo crystal — golden shards (HK's currency)
+      cx.fillStyle='#3c2c08'; cx.fillRect(-6,-6,4,9); cx.fillRect(1,-5,4,8);
+      cx.fillStyle='#504010'; cx.fillRect(-5,-5,2,7); cx.fillRect(2,-4,2,6);
+      cx.fillStyle='#3c2c08'; cx.fillRect(-4,-8,2,3); cx.fillRect(2,-7,2,3);
+      cx.fillStyle='rgba(200,160,40,0.6)';
+      cx.fillRect(-6,-6,4,1); cx.fillRect(1,-5,4,1);
+      cx.fillRect(-4,-8,2,1); cx.fillRect(2,-7,2,1);
+    }
+  }
+
+  function drawPixelRock(th,seed){
+    // HK: ancient ruins / stone rubble / geo shard
+    const v=seed%3;
+    cx.fillStyle='rgba(0,0,0,0.35)'; cx.fillRect(-6,3,12,5);
+    if(v===0){
+      // Crumbled ruin block — dark stone with pale edge
+      cx.fillStyle='#1a1828'; cx.fillRect(-6,-2,12,7);
+      cx.fillStyle='#242238'; cx.fillRect(-5,-5,10,5);
+      cx.fillStyle='#2e2c44'; cx.fillRect(-4,-6,8,3);
+      // Cracks
+      cx.fillStyle='#0c0a18';
+      cx.fillRect(-3,-3,1,4); cx.fillRect(2,-5,1,5);
+      // Pale edge highlight
+      cx.fillStyle='rgba(180,170,210,0.15)';
+      cx.fillRect(-6,-2,12,1); cx.fillRect(-6,-2,1,7);
+      // Tiny soul glow in crack
+      cx.fillStyle='rgba(100,80,180,0.3)';
+      cx.fillRect(-3,-2,1,2);
+    } else if(v===1){
+      // Bone/shell fragments — pale off-white
+      cx.fillStyle='#2c2a20'; cx.fillRect(-7,-1,14,6);
+      cx.fillStyle='#3a3828'; cx.fillRect(-6,-4,9,5);
+      cx.fillStyle='#4a4838'; cx.fillRect(-4,-5,6,3);
+      cx.fillStyle='#282620'; cx.fillRect(2,-3,5,4);
+      cx.fillStyle='rgba(200,200,180,0.12)';
+      cx.fillRect(-4,-5,3,2); cx.fillRect(2,-3,2,1);
+      cx.fillStyle='#0c0a08'; cx.fillRect(-7,4,14,1);
+    } else {
+      // Geo shards — angular, with faint gold glint
+      cx.fillStyle='#201c10'; cx.fillRect(-7,-1,6,5);
+      cx.fillStyle='#2c2818'; cx.fillRect(-6,-3,4,4);
+      cx.fillStyle='rgba(180,140,40,0.2)'; cx.fillRect(-6,-3,2,1);
+      cx.fillStyle='#0c0a08'; cx.fillRect(-7,3,6,1);
+      cx.fillStyle='#1c1810'; cx.fillRect(0,-1,6,4);
+      cx.fillStyle='#28241a'; cx.fillRect(1,-2,4,3);
+      cx.fillStyle='rgba(180,140,40,0.2)'; cx.fillRect(1,-2,2,1);
+      cx.fillStyle='#0c0a08'; cx.fillRect(0,3,6,1);
+    }
+  }
+  const tileAt=(tx,ty)=>(tx<0||ty<0||tx>=mW||ty>=mH)?1:tiles[ty][tx];
+  const solid=(tx,ty)=>{const t=tileAt(tx,ty);return t===1||(t===2&&(brickHP[ty+','+tx]||0)>0);};
+
+  //──────────────────────────────────────────────
+  // PROCEDURAL TILE TEXTURES (drawn to offscreen canvases)
+  //──────────────────────────────────────────────
+  let texCache={};
+
+  // Seeded LCG for deterministic noise per-tile
+  function lcg(seed){let s=seed|0;return()=>{s=(Math.imul(1664525,s)+1013904223)|0;return(s>>>0)/4294967296;};}
+
+  const THEMES=[
+    // 0 — Forgotten Crossroads
+    {name:'Crossroads', floor:'#1a2018',floor2:'#202818',dustCol:'#101410',
+     wall:{base:'#2a2e28',light:'#3a4038',dark:'#141814',top:'#484e48'},
+     brick:{base:'#303828',light:'#404e38',dark:'#1c2418',top:'#5a6850'},
+     fence:'#1a2018', water:'#101820', sky:'#0a1008'},
+    // 1 — Fungal Wastes
+    {name:'Fungal',     floor:'#102028',floor2:'#182e38',dustCol:'#0c1820',
+     wall:{base:'#1a3038',light:'#284858',dark:'#0e1e28',top:'#3a6070'},
+     brick:{base:'#205040',light:'#2c6858',dark:'#142e28',top:'#408870'},
+     fence:'#1a3040', water:'#082838', sky:'#061020'},
+    // 2 — Crystal Peak
+    {name:'Crystal',    floor:'#182030',floor2:'#202840',dustCol:'#101828',
+     wall:{base:'#283848',light:'#384860',dark:'#181c28',top:'#5070a0'},
+     brick:{base:'#304868',light:'#406090',dark:'#1e2e48',top:'#6888c0'},
+     fence:'#2a3858', water:'#101828', sky:'#0a1020'},
+    // 3 — Ancient Basin
+    {name:'Basin',      floor:'#100c1c',floor2:'#14101e',dustCol:'#080610',
+     wall:{base:'#1e1a30',light:'#2c2848',dark:'#0c0a18',top:'#3a3460'},
+     brick:{base:'#2a2040',light:'#3a3060',dark:'#180c28',top:'#504878'},
+     fence:'#1a1630', water:'#080610', sky:'#060410'},
+    // 4 — Greenpath
+    {name:'Greenpath',  floor:'#182818',floor2:'#203420',dustCol:'#101c10',
+     wall:{base:'#203020',light:'#304830',dark:'#141e14',top:'#405840'},
+     brick:{base:'#284828',light:'#386038',dark:'#182818',top:'#507850'},
+     fence:'#1c2c1c', water:'#102010', sky:'#0c1a0c'},
+    // 5 — City of Tears
+    {name:'CityTears',  floor:'#181c28',floor2:'#202438',dustCol:'#101420',
+     wall:{base:'#282c3c',light:'#383e54',dark:'#141826',top:'#484e6c'},
+     brick:{base:'#303860',light:'#404870',dark:'#1c2040',top:'#505880'},
+     fence:'#202838', water:'#0c1020', sky:'#0a0c1a'},
+    // 6 — The Hive
+    {name:'Hive',       floor:'#281c08',floor2:'#342410',dustCol:'#1a1008',
+     wall:{base:'#3c2c10',light:'#504018',dark:'#241a08',top:'#706030'},
+     brick:{base:'#5a3808',light:'#784c10',dark:'#382208',top:'#907028'},
+     fence:'#2c1c08', water:'#180c04', sky:'#100804'},
+    // 7 — Howling Cliffs
+    {name:'Cliffs',     floor:'#14101e',floor2:'#1c1828',dustCol:'#0c0a14',
+     wall:{base:'#201c30',light:'#302848',dark:'#100c1c',top:'#403860'},
+     brick:{base:'#281c3c',light:'#382850',dark:'#180e28',top:'#4a3868'},
+     fence:'#18142a', water:'#0c0818', sky:'#080610'},
+  ];
+
+
+
+
+  // HK floor: dark stone tiles, subtle 2-shade checker + crack detail
+  function makeFloorTex(th){
+    const oc=document.createElement('canvas'); oc.width=oc.height=T;
+    const ox=oc.getContext('2d');
+    const h=T>>1;
+    ox.fillStyle=th.floor; ox.fillRect(0,0,T,T);
+    ox.fillStyle=th.floor2||th.floor;
+    ox.fillRect(0,0,h,h); ox.fillRect(h,h,h,h);
+    const rng=lcg(curMap*991+13);
+    const r=parseInt(th.floor.slice(1,3),16),g=parseInt(th.floor.slice(3,5),16),b=parseInt(th.floor.slice(5,7),16);
+    ox.fillStyle=`rgb(${Math.min(255,r+20)},${Math.min(255,g+24)},${Math.min(255,b+18)})`;
+    ox.fillRect(Math.floor(rng()*T),Math.floor(rng()*T),1,1);
+    ox.fillStyle='rgba(0,0,0,0.4)';
+    if(rng()<0.5) ox.fillRect(Math.floor(rng()*T),Math.floor(rng()*T),Math.floor(rng()*6)+2,1);
+    return oc;
+  }
+  function makeWallTex(th){
+    const oc=document.createElement('canvas'); oc.width=oc.height=T;
+    const ox=oc.getContext('2d');
+    const rng=lcg(curMap*1337+2);
+    ox.fillStyle=th.wall.dark; ox.fillRect(0,0,T,T);
+    const blocks=[[1,1,9,9],[11,1,8,9],[1,11,8,8],[10,11,9,8]];
+    blocks.forEach(([sx,sy,sw,sh])=>{
+      ox.fillStyle=th.wall.base; ox.fillRect(sx,sy,sw,sh);
+      ox.fillStyle=th.wall.light; ox.fillRect(sx+1,sy+1,sw-2,sh-2);
+      ox.fillStyle='rgba(255,255,255,0.07)';
+      ox.fillRect(sx+1,sy+1,sw-2,1); ox.fillRect(sx+1,sy+1,1,sh-2);
+      ox.fillStyle='rgba(0,0,0,0.3)';
+      for(let i=0;i<2;i++) ox.fillRect(sx+1+Math.floor(rng()*(sw-3)),sy+1+Math.floor(rng()*(sh-3)),Math.floor(rng()*3)+1,1);
+    });
+    ox.fillStyle=th.wall.top; ox.globalAlpha=0.35; ox.fillRect(0,0,T,3); ox.globalAlpha=1;
+    ox.fillStyle='rgba(0,0,0,0.6)'; ox.fillRect(0,T-3,T,3);
+    return oc;
+  }
+
+  // Draw a breakable brick tile (reddish/terracotta)
+  function makeBrickTex(th,hp){
+    const oc=document.createElement('canvas'); oc.width=oc.height=T;
+    const ox=oc.getContext('2d');
+    const rng=lcg(curMap*2003+3+hp*7);
+    ox.fillStyle=th.brick.base; ox.fillRect(0,0,T,T);
+    // two-row brick pattern
+    const bh=Math.floor(T/2);
+    [0,bh].forEach((ry,ri2)=>{
+      const offX=ri2%2===0?0:Math.floor(T/2);
+      const bw=Math.floor(T*0.65);
+      for(let bx=-bw;bx<T+bw;bx+=bw){
+        ox.fillStyle=th.brick.light;
+        ox.fillRect(bx+offX+1,ry+1,bw-2,bh-2);
+        // surface variation
+        ox.fillStyle='rgba(0,0,0,0.08)';
+        for(let i=0;i<3;i++){ox.fillRect(bx+offX+rng()*(bw-4)+1,ry+rng()*(bh-4)+1,rng()*4+1,rng()*2+1);}
+        ox.fillStyle=th.brick.dark;
+        ox.fillRect(bx+offX,ry,bw,1); ox.fillRect(bx+offX,ry,1,bh);
+      }
+    });
+    ox.fillStyle=th.brick.top; ox.globalAlpha=0.4; ox.fillRect(0,0,T,4); ox.globalAlpha=1;
+    ox.fillStyle='rgba(0,0,0,0.4)'; ox.fillRect(0,T-3,T,3);
+    // damaged cracks
+    if(hp<2){
+      ox.strokeStyle='rgba(0,0,0,0.7)'; ox.lineWidth=1.5;
+      ox.beginPath(); ox.moveTo(4,4); ox.lineTo(T/2,T*0.6); ox.lineTo(T-4,T*0.3); ox.stroke();
+      ox.beginPath(); ox.moveTo(T*0.6,2); ox.lineTo(T*0.4,T-4); ox.stroke();
+      ox.fillStyle='rgba(0,0,0,0.2)'; ox.fillRect(0,0,T,T);
+    }
+    return oc;
+  }
+
+  function getTex(type,r,c){
+    const th=THEMES[curMap]||THEMES[0];
+    if(type===0){
+      if(!texCache.floor) texCache.floor=makeFloorTex(th);
+      return texCache.floor;
+    }
+    if(type===1){
+      if(!texCache.wall) texCache.wall=makeWallTex(th);
+      return texCache.wall;
+    }
+    if(type===2){
+      const hp=brickHP[r+','+c]||0;
+      const key='b'+hp;
+      if(!texCache[key]) texCache[key]=makeBrickTex(th,hp);
+      return texCache[key];
+    }
+    return null;
+  }
+
+  //──────────────────────────────────────────────
+  // A* PATHFINDING (grid-based)
+  //──────────────────────────────────────────────
+  function aStar(sx,sy,gx,gy){
+    // work in tile space
+    const tileOf=v=>Math.floor(v/T);
+    const sc=tileOf(sx), sr=tileOf(sy);
+    const gc=tileOf(gx), gr=tileOf(gy);
+    if(sc===gc&&sr===gr) return null;
+
+    const key=(r,c)=>r*64+c;
+    const h=(r,c)=>Math.abs(r-gr)+Math.abs(c-gc);
+
+    const open=new Map();   // key -> {r,c,g,f,parent}
+    const closed=new Set();
+    const start={r:sr,c:sc,g:0,f:h(sr,sc),parent:null};
+    open.set(key(sr,sc),start);
+
+    let iters=0;
+    while(open.size&&iters++<400){
+      // pick lowest f
+      let best=null;
+      for(const node of open.values()) if(!best||node.f<best.f) best=node;
+      if(best.r===gr&&best.c===gc){
+        // reconstruct
+        const path=[];
+        let n=best;
+        while(n){path.unshift({r:n.r,c:n.c});n=n.parent;}
+        return path;
+      }
+      open.delete(key(best.r,best.c));
+      closed.add(key(best.r,best.c));
+
+      // 4-directional neighbours
+      for(const[dr,dc] of[[-1,0],[1,0],[0,-1],[0,1]]){
+        const nr=best.r+dr, nc=best.c+dc;
+        if(nr<0||nr>=mH||nc<0||nc>=mW) continue;
+        if(solid(nc,nr)) continue;
+        const k=key(nr,nc);
+        if(closed.has(k)) continue;
+        const g=best.g+1;
+        const existing=open.get(k);
+        if(!existing||g<existing.g){
+          open.set(k,{r:nr,c:nc,g,f:g+h(nr,nc),parent:best});
+        }
+      }
+    }
+    return null; // no path
+  }
+
+  //──────────────────────────────────────────────
+  // TANK
+  //──────────────────────────────────────────────
+  const TR=7;
+  const TURN=0.055, ACCEL=0.22, FRIC=0.80, MAXV=2.8;
+
+  function mkTank(x,y,ang,body,track,isP1){
+    return{x,y,ang,tAng:ang,vel:0,hp:100,shots:5,reloadT:0,fireCD:0,
+           body,track,isP1,alive:true,trackT:0,flash:0,deadT:0,
+           // pathfinding state
+           path:null,pathIdx:0,pathTimer:0,stuckTimer:0,lastX:0,lastY:0};
+  }
+  let t1,t2;
+
+  //──────────────────────────────────────────────
+  // SHELLS (bounce ×2)
+  //──────────────────────────────────────────────
+  let shells=[];
+  function fireShell(tank){
+    if(!tank.alive||tank.fireCD>0||tank.shots<=0) return;
+    const bx=tank.x+Math.cos(tank.tAng)*10;
+    const by=tank.y+Math.sin(tank.tAng)*10;
+    shells.push({x:bx,y:by,vx:Math.cos(tank.tAng)*5,vy:Math.sin(tank.tAng)*5,
+                 own:tank.isP1,bounces:2,life:200,trail:[]});
+    spawnPfx(bx,by,'#ffcc00',6,5,10);
+    tank.shots--; tank.fireCD=14;
+    if(tank.shots===0) tank.reloadT=110;
+    Snd.shoot();
+  }
+
+  //──────────────────────────────────────────────
+  // PARTICLES
+  //──────────────────────────────────────────────
+  let pfx=[], trackMarks=[];
+  function spawnPfx(x,y,col,n,spd,life){
+    for(let i=0;i<n;i++){
+      const a=Math.random()*TAU, sp=rnd(0.5,spd);
+      pfx.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,col,life,ml:life,sz:rnd(2,5)});
+    }
+  }
+  function bigBoom(x,y){
+    const cols=['#ff4400','#ff8800','#ffcc00','#ffffff','#cc2000'];
+    for(let i=0;i<50;i++) spawnPfx(x,y,cols[ri(0,4)],1,rnd(2,10),ri(30,70));
+    for(let i=0;i<20;i++) spawnPfx(x,y,'#555',1,rnd(1,5),ri(40,80));
+    // smoke rings
+    for(let i=0;i<8;i++){
+      const a=Math.random()*TAU,sp=rnd(1,3);
+      pfx.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+                col:'rgba(80,80,80,0.6)',life:55,ml:55,sz:rnd(6,14)});
+    }
+  }
+  function brickPop(wx,wy,th){
+    const c=th?th.brick.base:'#8b4513';
+    spawnPfx(wx,wy,c,5,3,24);
+    spawnPfx(wx,wy,'rgba(255,120,40,0.7)',4,2,18);
+          Snd.explode();
+  }
+  let floats=[];
+  function addFloat(x,y,txt,col){floats.push({x,y,txt,col,life:75,vy:-0.5});}
+  let shkT=0,shkA=0;
+  function shake(a,t){shkA=Math.max(shkA,a);shkT=Math.max(shkT,t);}
+
+  //──────────────────────────────────────────────
+  // INPUT
+  //──────────────────────────────────────────────
+  const K={};
+  let inputBound=false;
+  function bindInput(){
+    if(inputBound)return;inputBound=true;
+    window.addEventListener('keydown',e=>{
+      K[e.code]=true;
+      if(['Space','Enter','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))
+        e.preventDefault();
+    });
+    window.addEventListener('keyup',e=>K[e.code]=false);
+  }
+  const getP1=()=>({fwd:K.KeyW,back:K.KeyS,left:K.KeyA,right:K.KeyD,fire:K.Space});
+  const getP2=()=>({fwd:K.ArrowUp,back:K.ArrowDown,left:K.ArrowLeft,right:K.ArrowRight,fire:K.Enter});
+
+  //──────────────────────────────────────────────
+  // BOT AI — simple, reliable, always moving
+  //──────────────────────────────────────────────
+  let botFireTimer=0;
+
+  function hasLOS(ax,ay,bx,by){
+    // Bresenham line-of-sight in tile space
+    let x0=Math.floor(ax/T), y0=Math.floor(ay/T);
+    const x1=Math.floor(bx/T), y1=Math.floor(by/T);
+    const dx=Math.abs(x1-x0), dy=Math.abs(y1-y0);
+    const sx=x0<x1?1:-1, sy=y0<y1?1:-1;
+    let err=dx-dy;
+    for(let i=0;i<60;i++){
+      if(x0===x1&&y0===y1) return true;
+      if(solid(x0,y0)) return false;
+      const e2=2*err;
+      if(e2>-dy){err-=dy;x0+=sx;}
+      if(e2<dx){err+=dx;y0+=sy;}
+    }
+    return true;
+  }
+
+  function botThink(bot,foe,dt){
+    if(!bot.alive||!foe.alive) return {fwd:0,back:0,left:0,right:0,fire:0};
+
+    const dx=foe.x-bot.x, dy=foe.y-bot.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const foeAngle=Math.atan2(dy,dx);
+    const los=hasLOS(bot.x,bot.y,foe.x,foe.y);
+
+    // ── Stuck detection: if barely moved, force repath ──
+    const moved=Math.hypot(bot.x-bot.lastX, bot.y-bot.lastY);
+    bot.stuckTimer = moved < 0.5 ? bot.stuckTimer + dt : 0;
+    bot.lastX=bot.x; bot.lastY=bot.y;
+    if(bot.stuckTimer > 1.2){
+      bot.stuckTimer=0;
+      bot.path=null; // force new A* path
+      // Wiggle: reverse briefly
+      bot._wiggle=(bot._wiggle||0)+1;
+    }
+
+    // ── State: simply hunt unless too close (back off) ──
+    // Timer for repaths
+    bot.pathTimer=(bot.pathTimer||0)-dt;
+    if(!bot.path || bot.pathIdx>=( bot.path?bot.path.length:0) || bot.pathTimer<=0){
+      bot.pathTimer = 0.6 + Math.random()*0.6;
+      // Goal: move toward foe until comfortable range, then strafe
+      let gx, gy;
+      const idealDist = T*5;
+      if(dist > idealDist*1.3){
+        // Too far — move toward foe
+        gx = foe.x; gy = foe.y;
+      } else if(dist < T*2.5){
+        // Too close — back away
+        gx = bot.x - Math.cos(foeAngle)*T*4;
+        gy = bot.y - Math.sin(foeAngle)*T*4;
+        gx = clamp(gx, T*2, mW*T-T*2);
+        gy = clamp(gy, T*2, mH*T-T*2);
+      } else {
+        // Good range — strafe perpendicular to foe
+        const strafeAng = foeAngle + (Math.random()<0.5 ? Math.PI*0.5 : -Math.PI*0.5);
+        gx = clamp(bot.x + Math.cos(strafeAng)*T*rnd(3,6), T*2, mW*T-T*2);
+        gy = clamp(bot.y + Math.sin(strafeAng)*T*rnd(3,6), T*2, mH*T-T*2);
+      }
+      bot.path = aStar(bot.x, bot.y, gx, gy);
+      bot.pathIdx = 1;
+    }
+
+    // ── Follow path ──
+    let steerAngle = foeAngle; // default: face foe
+    let wantMove = true;
+    if(bot.path && bot.pathIdx < bot.path.length){
+      const wp = bot.path[bot.pathIdx];
+      const wpX = wp.c*T+T/2, wpY = wp.r*T+T/2;
+      const wdist = Math.hypot(wpX-bot.x, wpY-bot.y);
+      if(wdist < T*0.7) bot.pathIdx++;
+      steerAngle = Math.atan2(wpY-bot.y, wpX-bot.x);
+    } else {
+      // At goal or no path — orbit
+      steerAngle = foeAngle + Math.PI*0.5;
+      wantMove = dist > T*3;
+    }
+
+    // Wiggle escape
+    if((bot._wiggle||0)>0){
+      steerAngle += Math.PI; // reverse direction briefly
+      bot._wiggle--;
+    }
+
+    // ── Turn toward steer angle ──
+    let diff = steerAngle - bot.ang;
+    while(diff > Math.PI) diff -= TAU;
+    while(diff < -Math.PI) diff += TAU;
+    const left  = diff < -0.08 ? 1 : 0;
+    const right = diff >  0.08 ? 1 : 0;
+    const fwd   = (wantMove && dist > T*2) ? 1 : 0;
+    const back  = dist < T*1.8 ? 1 : 0;
+
+    // ── Turret: always point at foe ──
+    bot.tAng = foeAngle;
+
+    // ── Fire: LOS + cooldown, random spread to feel human ──
+    botFireTimer -= dt;
+    let fire = 0;
+    const aimErr = Math.abs(foeAngle - bot.tAng); // always ~0 since we set tAng=foeAngle
+    if(los && dist < T*11 && botFireTimer <= 0){
+      fire = 1;
+      botFireTimer = 0.35 + Math.random()*0.65;
+    }
+
+    return {fwd, back, left, right, fire};
+  }
+
+  //──────────────────────────────────────────────
+  // PHYSICS
+  //──────────────────────────────────────────────
+  function moveActor(tank,dx,dy){
+    tank.x+=dx;
+    if(solid(Math.floor((tank.x-TR)/T),Math.floor((tank.y-TR)/T))||
+       solid(Math.floor((tank.x+TR)/T),Math.floor((tank.y-TR)/T))||
+       solid(Math.floor((tank.x-TR)/T),Math.floor((tank.y+TR)/T))||
+       solid(Math.floor((tank.x+TR)/T),Math.floor((tank.y+TR)/T)))
+    {tank.x-=dx; tank.vel*=-0.25;}
+
+    tank.y+=dy;
+    if(solid(Math.floor((tank.x-TR)/T),Math.floor((tank.y-TR)/T))||
+       solid(Math.floor((tank.x+TR)/T),Math.floor((tank.y-TR)/T))||
+       solid(Math.floor((tank.x-TR)/T),Math.floor((tank.y+TR)/T))||
+       solid(Math.floor((tank.x+TR)/T),Math.floor((tank.y+TR)/T)))
+    {tank.y-=dy; tank.vel*=-0.25;}
+
+    tank.x=clamp(tank.x,TR+1,mW*T-TR-1);
+    tank.y=clamp(tank.y,TR+1,mH*T-TR-1);
+  }
+
+  function updTank(tank,inp,dt){
+    if(!tank.alive){tank.deadT++;return;}
+    const fr=dt*60;
+    if(tank.fireCD>0) tank.fireCD-=fr;
+    if(tank.reloadT>0){tank.reloadT-=fr;if(tank.reloadT<=0)tank.shots=5;}
+    if(tank.flash>0) tank.flash-=fr;
+
+    if(inp.left)  tank.ang-=TURN*fr;
+    if(inp.right) tank.ang+=TURN*fr;
+    if(!vsBot||tank.isP1) tank.tAng=tank.ang;
+
+    if(inp.fwd)  tank.vel=clamp(tank.vel+ACCEL,-MAXV,MAXV);
+    if(inp.back) tank.vel=clamp(tank.vel-ACCEL*0.7,-MAXV,MAXV);
+    tank.vel*=FRIC;
+
+    if(Math.abs(tank.vel)>0.08){
+      tank.trackT+=tank.vel*fr*0.45;
+      // Ground track marks — start at back edge of tank (TR px behind centre)
+      if(Math.random()<0.3){
+        const behind=TR+2; // just past the rear of the hull
+        const bx=tank.x-Math.cos(tank.ang)*behind;
+        const by=tank.y-Math.sin(tank.ang)*behind;
+        trackMarks.push({x:bx,y:by,ang:tank.ang,alpha:0.28,life:120});
+        if(trackMarks.length>60) trackMarks.shift();
+      }
+      // Dust puff
+      if(Math.random()<0.08){
+        const da=tank.ang+Math.PI+rnd(-0.5,0.5);
+        const th=THEMES[curMap]||THEMES[0];
+        pfx.push({x:tank.x,y:tank.y,
+                  vx:Math.cos(da)*rnd(0.2,0.7),vy:Math.sin(da)*rnd(0.2,0.7),
+                  col:th.dustCol,life:22,ml:22,sz:rnd(3,8)});
+      }
+    }
+    moveActor(tank,Math.cos(tank.ang)*tank.vel*fr,Math.sin(tank.ang)*tank.vel*fr);
+    if(inp.fire) fireShell(tank);
+  }
+
+  //──────────────────────────────────────────────
+  // SHELL PHYSICS
+  //──────────────────────────────────────────────
+  function updShells(){
+    const th=THEMES[curMap]||THEMES[0];
+    for(let i=shells.length-1;i>=0;i--){
+      const sh=shells[i];
+      sh.trail.push({x:sh.x,y:sh.y});
+      if(sh.trail.length>3) sh.trail.shift();
+      sh.x+=sh.vx; sh.y+=sh.vy; sh.life--;
+      if(sh.life<=0){shells.splice(i,1);continue;}
+
+      const tx=Math.floor(sh.x/T), ty=Math.floor(sh.y/T);
+      if(solid(tx,ty)){
+        if(sh.bounces>0){
+          sh.bounces--;
+          const px=sh.x-sh.vx, py=sh.y-sh.vy;
+          const hx=solid(Math.floor(sh.x/T),Math.floor(py/T));
+          const hy=solid(Math.floor(px/T),Math.floor(sh.y/T));
+          if(hx&&!hy) sh.vx=-sh.vx;
+          else if(hy&&!hx) sh.vy=-sh.vy;
+          else{sh.vx=-sh.vx;sh.vy=-sh.vy;}
+          sh.x+=sh.vx*2; sh.y+=sh.vy*2;
+          spawnPfx(sh.x,sh.y,'#ffcc44',5,3,12); shake(2,3);
+        } else {
+          spawnPfx(sh.x,sh.y,'#ffcc44',5,3,12); shake(2,3);
+          shells.splice(i,1); continue;
+        }
+      }
+      for(const tank of[t1,t2]){
+        if(!tank||!tank.alive||tank.isP1===sh.own) continue;
+        const dx=sh.x-tank.x, dy=sh.y-tank.y;
+        if(dx*dx+dy*dy<(TR+7)*(TR+7)){
+          tank.hp=0;
+          tank.flash=16;
+          spawnPfx(tank.x,tank.y,tank.body,10,3.5,22);
+          shake(16,24);
+          Snd.explode();
+          shells.splice(i,1);
+          tank.alive=false; bigBoom(tank.x,tank.y);
+          addFloat(tank.x,tank.y-36,'KO!','#ff2200');
+          if(onWin) onWin(sh.own?'PLAYER 1':'PLAYER 2');
+          break;
+        }
+      }
+    }
+  }
+
+  function updPfx(){
+    for(let i=pfx.length-1;i>=0;i--){
+      const p=pfx[i];
+      p.x+=p.vx;p.y+=p.vy;p.vx*=0.86;p.vy*=0.86;p.life--;
+      if(p.life<=0)pfx.splice(i,1);
+    }
+    for(let i=floats.length-1;i>=0;i--){
+      floats[i].y+=floats[i].vy; floats[i].life--;
+      if(floats[i].life<=0)floats.splice(i,1);
+    }
+  }
+
+  //──────────────────────────────────────────────
+  // CAMERA
+  //──────────────────────────────────────────────
+  let camX=0,camY=0;
+  function updateCam(){
+    // Centre map — negative offsets allowed so map centres when smaller than canvas
+    camX=Math.round((mW*T-W)/2);
+    camY=Math.round((mH*T-H)/2);
+  }
+
+  //──────────────────────────────────────────────
+  // RENDER
+  //──────────────────────────────────────────────
+  function draw(){
+    let sx=0,sy=0;
+    if(shkT>0){shkT--;sx=rnd(-shkA,shkA);sy=rnd(-shkA*0.5,shkA*0.5);if(!shkT)shkA=0;}
+    const th=THEMES[curMap]||THEMES[0];
+    cx.save();cx.translate(sx,sy);
+    cx.fillStyle=th.sky||'#06040e';cx.fillRect(-20,-20,W+40,H+40);
+    cx.save();cx.translate(-camX,-camY);
+    drawMap(th);drawDecos();drawTrackMarks();drawShadows();drawShells();drawPfx();
+    if(t1)drawTank(t1,th);
+    if(t2)drawTank(t2,th);
+    drawFloats();
+    cx.restore();
+    drawMinimap(th);
+    cx.restore();
+  }
+
+  function drawTrackMarks(){
+    const R=TR;
+    for(let i=trackMarks.length-1;i>=0;i--){
+      const m=trackMarks[i];
+      m.life--;
+      if(m.life<=0){trackMarks.splice(i,1);continue;}
+      const a=m.alpha*(m.life/120)*0.7;
+      cx.save();
+      cx.translate(m.x,m.y);cx.rotate(m.ang);
+      cx.globalAlpha=a;
+      cx.fillStyle='rgba(0,0,0,1)';
+      // Two thin tread stripes
+      cx.fillRect(-(R-3)-1,-3,4,6);
+      cx.fillRect((R-3)-3,-3,4,6);
+      cx.restore();
+    }
+    cx.globalAlpha=1;
+  }
+
+  function drawMap(th){
+    const x0=Math.max(0,Math.floor(camX/T)-1), y0=Math.max(0,Math.floor(camY/T)-1);
+    const x1=Math.min(mW,x0+Math.ceil(W/T)+3), y1=Math.min(mH,y0+Math.ceil(H/T)+3);
+    for(let r=y0;r<y1;r++) for(let c=x0;c<x1;c++){
+      const t=tileAt(c,r);
+      const wx=c*T, wy=r*T;
+      const tex=getTex(t,r,c);
+      if(tex) cx.drawImage(tex,wx,wy);
+      // overlay: wall interior shadow cast
+      if(t===0){
+        // cast shadow from left/top walls
+        if(solid(c-1,r)){cx.fillStyle='rgba(0,0,0,0.22)';cx.fillRect(wx,wy,6,T);}
+        if(solid(c,r-1)){cx.fillStyle='rgba(0,0,0,0.22)';cx.fillRect(wx,wy,T,6);}
+      }
+    }
+  }
+
+  // Draw floor-projected tank shadows before tanks
+  function drawShadows(){
+    for(const tank of[t1,t2]){
+      if(!tank||!tank.alive) continue;
+      cx.save();
+      cx.translate(tank.x+3,tank.y+5);
+      cx.scale(1.1,0.5);
+      cx.fillStyle='rgba(0,0,0,0.28)';
+      cx.beginPath();cx.arc(0,0,TR+3,0,TAU);cx.fill();
+      cx.restore();
+    }
+  }
+
+  function drawShells(){
+    shells.forEach(sh=>{
+      if(sh.trail.length>1){
+        const g=cx.createLinearGradient(sh.trail[0].x,sh.trail[0].y,sh.x,sh.y);
+        g.addColorStop(0,'rgba(255,80,0,0)');
+        g.addColorStop(1,'rgba(255,160,40,0.8)');
+        cx.strokeStyle=g;cx.lineWidth=2.5;
+        cx.beginPath();cx.moveTo(sh.trail[0].x,sh.trail[0].y);
+        sh.trail.forEach(p=>cx.lineTo(p.x,p.y));cx.lineTo(sh.x,sh.y);cx.stroke();
+      }
+      // glow halo
+      const g2=cx.createRadialGradient(sh.x,sh.y,0,sh.x,sh.y,5);
+      g2.addColorStop(0,'rgba(255,160,40,0.6)');
+      g2.addColorStop(1,'rgba(255,80,0,0)');
+      cx.fillStyle=g2;
+      cx.beginPath();cx.arc(sh.x,sh.y,5,0,TAU);cx.fill();
+      // core
+      cx.fillStyle='#fff0a0';
+      cx.beginPath();cx.arc(sh.x,sh.y,2.5,0,TAU);cx.fill();
+      cx.fillStyle='#ffffff';
+      cx.beginPath();cx.arc(sh.x-0.6,sh.y-0.6,1.0,0,TAU);cx.fill();
+    });
+  }
+
+  function drawPfx(){
+    pfx.forEach(p=>{
+      const a=Math.max(0,p.life/p.ml);
+      cx.globalAlpha=a*0.88;
+      cx.fillStyle=p.col;
+      cx.fillRect(Math.round(p.x-p.sz/2),Math.round(p.y-p.sz/2),Math.ceil(p.sz),Math.ceil(p.sz));
+    });
+    cx.globalAlpha=1;
+  }
+
+  function drawFloats(){
+    floats.forEach(f=>{
+      cx.globalAlpha=Math.min(1,f.life/20);
+      cx.shadowColor='rgba(0,0,0,0.8)';cx.shadowBlur=4;
+      cx.fillStyle=f.col;cx.font='bold 6px "Press Start 2P"';
+      cx.textAlign='center';cx.fillText(f.txt,f.x,f.y);
+    });
+    cx.globalAlpha=1;cx.shadowBlur=0;cx.textAlign='left';
+  }
+
+  //──────────────────────────────────────────────
+  // TANK RENDERING — high-quality top-down
+  //──────────────────────────────────────────────
+  function drawTank(tank,th){
+    if(!tank.alive){
+      if(tank.deadT<50){
+        cx.save();cx.translate(tank.x,tank.y);
+        const sc=Math.max(0,1-tank.deadT/45);
+        cx.rotate(tank.deadT*0.22);cx.scale(sc,sc);cx.globalAlpha=sc*0.9;
+        drawBody(tank);cx.globalAlpha=1;cx.restore();
+      }
+      return;
+    }
+
+    // Ground shadow (ellipse, squashed)
+    cx.save();cx.translate(tank.x+3,tank.y+4);cx.scale(1.05,0.45);
+    cx.fillStyle='rgba(0,0,0,0.32)';
+    cx.beginPath();cx.arc(0,0,TR+1,0,TAU);cx.fill();cx.restore();
+
+    // Body (rotates with heading)
+    cx.save();cx.translate(tank.x,tank.y);cx.rotate(tank.ang);
+    drawBody(tank);cx.restore();
+
+    // Turret (separate rotation, -PI/2 offset so barrel points along ang direction)
+    cx.save();cx.translate(tank.x,tank.y);cx.rotate(tank.tAng-Math.PI/2);
+    drawTurret(tank);cx.restore();
+
+    // HUD (world-space, no rotation)
+    drawTankHUD(tank);
+  }
+
+  function drawBody(tank){
+    const fl=tank.flash>0&&Math.floor(tank.flash/3)%2===0;
+    const C=fl?'#ffffff':tank.body;
+    const T2=fl?'#aaaaaa':tank.track;
+
+    // ── HULL first (wider, drawn under tracks visually) ──
+    cx.fillStyle=C;
+    cx.fillRect(-5,-7,10,14);
+    cx.fillStyle='rgba(255,255,255,0.22)';
+    cx.fillRect(-5,-7,10,2);           // top highlight
+    cx.fillStyle='rgba(0,0,0,0.22)';
+    cx.fillRect(-5,5,10,2);            // bottom shadow
+    cx.fillStyle='rgba(0,0,0,0.12)';
+    cx.fillRect(-1,-7,2,14);           // centre crease
+    cx.strokeStyle='#000';cx.lineWidth=1;
+    cx.strokeRect(-5,-7,10,14);
+
+    // ── LEFT TRACK — thin strip ──
+    cx.fillStyle=T2;
+    cx.fillRect(-8,-7,3,14);
+    cx.fillStyle='rgba(0,0,0,0.55)';
+    for(let y=-6;y<7;y+=3) cx.fillRect(-8,y,3,2);
+    cx.strokeStyle='rgba(0,0,0,0.8)';cx.lineWidth=1;
+    cx.strokeRect(-8,-7,3,14);
+
+    // ── RIGHT TRACK — thin strip ──
+    cx.fillStyle=T2;
+    cx.fillRect(5,-7,3,14);
+    cx.fillStyle='rgba(0,0,0,0.55)';
+    for(let y=-6;y<7;y+=3) cx.fillRect(5,y,3,2);
+    cx.strokeStyle='rgba(0,0,0,0.8)';cx.lineWidth=1;
+    cx.strokeRect(5,-7,3,14);
+  }
+
+  function drawTurret(tank){
+    const fl=tank.flash>0&&Math.floor(tank.flash/3)%2===0;
+    const C=fl?'#ffffff':tank.body;
+
+    // ── BARREL: 3px wide, points forward (up in local space after rotate) ──
+    cx.fillStyle='rgba(0,0,0,0.4)';
+    cx.fillRect(-1,1,4,14); // shadow
+    cx.fillStyle='#3a2e10';
+    cx.fillRect(-2,0,4,14);
+    cx.fillStyle='rgba(255,255,255,0.18)';
+    cx.fillRect(-2,0,1,14);
+    cx.strokeStyle='#000';cx.lineWidth=1;
+    cx.strokeRect(-2,0,4,14);
+
+    // ── TURRET BOX: 10×10 square ──
+    cx.fillStyle=C;
+    cx.fillRect(-5,-5,10,10);
+    // top-left highlight pixel
+    cx.fillStyle='rgba(255,255,255,0.28)';
+    cx.fillRect(-5,-5,10,2);
+    cx.fillRect(-5,-5,2,10);
+    // bottom-right shadow
+    cx.fillStyle='rgba(0,0,0,0.28)';
+    cx.fillRect(-5,3,10,2);
+    cx.fillRect(3,-5,2,10);
+    // centre rivet dot
+    cx.fillStyle='rgba(0,0,0,0.35)';
+    cx.fillRect(-1,-1,3,3);
+    cx.strokeStyle='#000';cx.lineWidth=1;
+    cx.strokeRect(-5,-5,10,10);
+  }
+
+  function drawTankHUD(tank){
+    // HP bar (world space)
+    const bw=26,bh=4,bx=tank.x-13,by=tank.y-TR-16;
+    cx.fillStyle='rgba(0,0,0,0.6)';cx.fillRect(bx-1,by-1,bw+2,bh+2);
+    cx.fillStyle='#1a1a1a';cx.fillRect(bx,by,bw,bh);
+    const hf=tank.hp/100;
+    const hg=cx.createLinearGradient(bx,by,bx+bw*hf,by);
+    hg.addColorStop(0,hf>0.6?'#22dd22':hf>0.3?'#ddcc00':'#dd2222');
+    hg.addColorStop(1,hf>0.6?'#88ff44':hf>0.3?'#ffee44':'#ff4444');
+    cx.fillStyle=hg;cx.fillRect(bx,by,bw*hf,bh);
+    // HP bar shine
+    cx.fillStyle='rgba(255,255,255,0.2)';cx.fillRect(bx,by,bw*hf,1);
+
+    // Ammo pips
+    for(let i=0;i<5;i++){
+      const px=tank.x-12+i*6, py=tank.y+TR+7;
+      cx.fillStyle=i<tank.shots?'#ff8800':'#1a0800';
+      cx.fillRect(px,py,5,4);
+      if(i<tank.shots){cx.fillStyle='rgba(255,255,255,0.3)';cx.fillRect(px,py,5,1);}
+    }
+    if(tank.reloadT>0){
+      cx.fillStyle='rgba(255,120,20,0.95)';
+      cx.shadowColor='rgba(220,80,0,0.8)';cx.shadowBlur=4;
+      cx.font='5px "Press Start 2P"';cx.textAlign='center';
+      cx.fillText('RELOAD',tank.x,tank.y-TR-20);
+      cx.shadowBlur=0;
+    }
+    // Player label with subtle glow
+    cx.fillStyle=tank.body==='#e8e0c8'?'#c8c0a8':'#4a4058';
+    cx.shadowColor=tank.body==='#e8e0c8'?'rgba(200,192,168,0.6)':'rgba(60,50,80,0.6)';
+    cx.shadowBlur=6;
+    cx.font='5px "Press Start 2P"';cx.textAlign='center';
+    cx.fillText(tank.isP1?'P1':'P2',tank.x,tank.y+TR+20);
+    cx.shadowBlur=0;cx.textAlign='left';
+  }
+
+  // Helper: draw rounded rect path
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+    ctx.closePath();
+  }
+
+  function drawMinimap(th){
+    const mw=60,mh=46,mx=W-mw-4,my=4;
+    cx.fillStyle='rgba(4,3,12,0.92)';cx.fillRect(mx-1,my-1,mw+2,mh+2);
+    cx.strokeStyle='#ff6600';cx.lineWidth=1;cx.strokeRect(mx-1,my-1,mw+2,mh+2);
+    const sx=mw/mW,sy=mh/mH;
+    for(let r=0;r<mH;r++) for(let c=0;c<mW;c++){
+      const t=tileAt(c,r);
+      if(t===1){cx.fillStyle=th.wall.base;cx.fillRect(mx+c*sx,my+r*sy,sx+0.5,sy+0.5);}
+      else if(t===2){cx.fillStyle=th.brick.base;cx.fillRect(mx+c*sx,my+r*sy,sx+0.5,sy+0.5);}
+    }
+    for(const tk of[t1,t2]){
+      if(!tk||!tk.alive) continue;
+      const col=tk.body==='#e8e0c8'?'#c8c0a8':'#5a4870';
+      const px=mx+tk.x/T*sx, py=my+tk.y/T*sy;
+      cx.fillStyle=col;cx.beginPath();cx.arc(px,py,3,0,TAU);cx.fill();
+      cx.strokeStyle=col;cx.lineWidth=1;
+      cx.beginPath();cx.moveTo(px,py);
+      cx.lineTo(px+Math.cos(tk.ang)*6,py+Math.sin(tk.ang)*6);cx.stroke();
+    }
+  }
+
+  //──────────────────────────────────────────────
+  // MAIN LOOP
+  //──────────────────────────────────────────────
+  let lt=0;
+  let _remoteInp={fwd:0,back:0,left:0,right:0,fire:0};
+  function setRemoteInp(inp){ _remoteInp=inp; }
+
+  function loop(ts){
+    if(!on){raf=null;return;}
+    const dt=Math.min((ts-lt)/1000,0.05);lt=ts;
+    raf=requestAnimationFrame(loop);
+    let i1,i2;
+    if(Net.isConnected()){
+      // Net game: each player sends their own inputs
+      // Host = P1 (t1), Guest = P2 (t2)
+      if(Net.getIsHost()){
+        i1=getP1(); i2=_remoteInp;
+        Net.send({type:'tank_inp',inp:i1});
+      } else {
+        i2=getP2(); i1=_remoteInp;
+        Net.send({type:'tank_inp',inp:i2});
+      }
+    } else {
+      i1=getP1();
+      i2=vsBot?botThink(t2,t1,dt):getP2();
+    }
+    if(t1)updTank(t1,i1,dt);
+    if(t2)updTank(t2,i2,dt);
+    updShells();updPfx();updateCam();draw();
+    Match.updHUD();
+  }
+
+  function init(bot,winCb){
+    vsBot=bot;onWin=winCb;buildMap();
+    const _a=$('play');
+    W=cv.width=_a.offsetWidth||800;
+    H=cv.height=_a.offsetHeight||566;
+    // spawn in opposite corners, away from walls
+    // Find safe spawn: row 1/col 1 area and opposite corner area, both floor tiles
+    function safeSpawn(startR,startC,dirR,dirC){
+      for(let dr=0;dr<5;dr++) for(let dc=0;dc<5;dc++){
+        const r=startR+dr*dirR, c=startC+dc*dirC;
+        if(r>=0&&r<mH&&c>=0&&c<mW&&tiles[r][c]===0)
+          return{x:c*T+T/2,y:r*T+T/2};
+      }
+      return{x:2*T+T/2,y:2*T+T/2};
+    }
+    const s1=safeSpawn(1,1,1,1);
+    const s2=safeSpawn(mH-2,mW-2,-1,-1);
+    const _p1w1=Chess.getP1IsWhite();
+    const _b1=_p1w1?'#e8e0c8':'#181418', _tr1=_p1w1?'#a89878':'#0a080e';
+    const _b2=_p1w1?'#181418':'#e8e0c8', _tr2=_p1w1?'#0a080e':'#a89878';
+    t1=mkTank(s1.x,s1.y,       0,   _b1,_tr1,true);
+    t2=mkTank(s2.x,s2.y, Math.PI,   _b2,_tr2,false);
+    shells=[];pfx=[];floats=[];trackMarks=[];shkT=0;shkA=0;botFireTimer=0;
+    botFireTimer=0;
+    camX=clamp(t1.x-W/2,0,mW*T-W); camY=clamp(t1.y-H/2,0,mH*T-H);
+    bindInput();on=false;
+  }
+
+  function enable(){
+    on=true;
+    const a=$('play');
+    // Full root dimensions (ba now covers HUD too)
+    const root=document.getElementById('root');
+    W=cv.width=root.offsetWidth||820; H=cv.height=root.offsetHeight||620;
+
+    // Fresh map + fresh tanks every single tank phase
+    buildMap();
+    function safeSpawn(startR,startC,dirR,dirC){
+      for(let dr=0;dr<6;dr++) for(let dc=0;dc<6;dc++){
+        const r=startR+dr*dirR, c=startC+dc*dirC;
+        if(r>=0&&r<mH&&c>=0&&c<mW&&tiles[r][c]===0)
+          return{x:c*T+T/2,y:r*T+T/2};
+      }
+      return{x:2*T+T/2,y:2*T+T/2};
+    }
+    const s1=safeSpawn(1,1,1,1);
+    const s2=safeSpawn(mH-2,mW-2,-1,-1);
+    const _p1we=Chess.getP1IsWhite();
+    const _b1b=_p1we?'#e8e0c8':'#181418', _tr1b=_p1we?'#a89878':'#0a080e';
+    const _b2b=_p1we?'#181418':'#e8e0c8', _tr2b=_p1we?'#0a080e':'#a89878';
+    t1=mkTank(s1.x,s1.y,       0,   _b1b,_tr1b,true);
+    t2=mkTank(s2.x,s2.y, Math.PI,   _b2b,_tr2b,false);
+
+    // Clear all projectiles and effects
+    shells=[];pfx=[];floats=[];trackMarks=[];shkT=0;shkA=0;botFireTimer=0;
+
+    lt=performance.now();
+    if(!raf)raf=requestAnimationFrame(loop);
+  }
+  function disable(){on=false;}
+
+  return{
+    init,enable,disable,setRemoteInp,
+    hp1:()=>t1?t1.hp:100, hp2:()=>t2?t2.hp:100,
+    sh1:()=>t1?(t1.reloadT>0?0:t1.shots/5*100):100,
+    sh2:()=>t2?(t2.reloadT>0?0:t2.shots/5*100):100,
+  };
+})();
+
+// ═══════════════════════════════════════════════
+//  MATCH CONTROLLER
+// ═══════════════════════════════════════════════
+const Match=(()=>{
+  let phase='chess',timer=35,over=false,bot=false,ra=null,lt=0;
+  let _chessOk=false;
+  // bonusSide: 'W' or 'B' — tank winner gets a free chess move next chess phase
+  let _bonusSide=null;
+
+  let _bannering=false;
+  let _isNetHost=false;
+
+  function start(isBot){
+    bot=isBot; _isNetHost=false;
+    _startMatch(isBot);
+  }
+
+  function startNet(seed, isHost){
+    _isNetHost=isHost;
+    bot=false;
+    _netSeed=seed;
+    // onMsg handled globally in wiring — no override here
+    _startMatch(false);
+  }
+
+  function _startMatch(isBot){
+    over=false; phase='chess'; timer=35; _chessOk=false; _bonusSide=null; _bannering=false;
+    const _p1w=Math.random()<0.5;
+    Chess.init(isBot, winner=>{ if(winner==='STALEMATE') endGame('STALEMATE','STALEMATE — THE GAME IS A DRAW!'); else endGame('CHECKMATE!', winner+' WINS THE WAR!'); }, _p1w);
+    // Update HUD labels based on random assignment
+    const _p1clr=_p1w?'WHITE':'BLACK', _p2clr=_p1w?'BLACK':'WHITE';
+    const _e1=$('hn-p1'); if(_e1) _e1.textContent='★ P1 ('+_p1clr+')';
+    const _e2=$('hn-p2'); if(_e2) _e2.textContent='P2 ('+_p2clr+') ★';
+    Tanks.init(isBot, winner=>{
+      const winS = winner==='PLAYER 1' ? 'W' : 'B';
+      _bonusSide = winS;
+      flashBonus(winner);
+    });
+    show('s-match');
+    $('ov').classList.remove('on');
+    enterChess();
+    lt=performance.now();
+    if(ra) cancelAnimationFrame(ra);
+    ra=requestAnimationFrame(tick);
+  }
+
+  function enterChess(){
+    if(over) return;
+    phase='chess'; timer=35; _chessOk=true;
+    $('ca').style.display='flex';
+    // Restore tank canvas and HUD
+    const ba=$('ba'); ba.style.display='none';
+    ba.style.top='0'; ba.style.bottom='0';
+    $('hud').style.opacity='1'; $('hud').style.pointerEvents='';
+    $('phl').textContent='♟ CHESS'; $('phl').style.color='#5888c0';
+    Tanks.disable();
+    flash('#3a6898');
+    Chess.refreshUpd();
+    if(Net.isConnected()&&_isNetHost) Net.send({type:'phase',phase:'chess'});
+    setTimeout(()=>{
+      if(over) return;
+      if(_bonusSide){
+        // Force chess turn to the tank winner — guaranteed their move no matter what
+        Chess.forceTurn(_bonusSide);
+        if(_bonusSide===Chess.getBotSide() && bot){
+          // Bot won the tank battle — bot takes the bonus move automatically
+          Chess.triggerBotBonus();
+          setTimeout(()=>{ if(!over) Match.clearBonus(); }, 700);
+        }
+        // else: human won — their turn is forced, they click their piece normally
+      } else {
+        Chess.kickBotIfNeeded();
+      }
+    }, 400);
+  }
+  function netEnterChess(){ enterChess(); }
+
+  function enterTanks(){
+    if(over) return;
+    phase='tanks'; timer=35; _chessOk=false;
+    _bonusSide=null; // clear any unused bonus from previous chess phase
+    $('ca').style.display='none';
+    // Expand tank canvas to cover full root (over HUD)
+    const ba=$('ba');
+    ba.style.display='block';
+    ba.style.top='-54px'; ba.style.bottom='0'; ba.style.left='0'; ba.style.right='0';
+    $('hud').style.opacity='0'; $('hud').style.pointerEvents='none';
+    flash('#ff4400');
+    updHUD();
+    if(Net.isConnected()&&_isNetHost) Net.send({type:'phase',phase:'tanks'});
+    requestAnimationFrame(()=>{ if(!over) Tanks.enable(); });
+  }
+  function netEnterTanks(){ enterTanks(); }
+
+  function flash(col){
+    const el=$('pf');
+    el.style.background=col; el.style.opacity='0.45'; el.style.transition='none';
+    requestAnimationFrame(()=>{el.style.transition='opacity 0.7s'; el.style.opacity='0';});
+  }
+
+  function flashBonus(winner){
+    if(over) return;
+    Snd.tankBonus();
+    // Show banner over tank arena, then auto-switch to chess
+    const banner=document.createElement('div');
+    banner.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);'
+      +'background:rgba(10,4,0,0.97);border:3px solid #ff6600;padding:20px 32px;'
+      +'text-align:center;z-index:500;font-family:"Press Start 2P",monospace;pointer-events:none;';
+    banner.innerHTML='<div style="font-size:11px;color:#ff6600;margin-bottom:10px;">★ TANK VICTORY ★</div>'
+      +'<div style="font-size:7px;color:#ccc;line-height:1.7">'+winner+' DESTROYED THE ENEMY<br>BONUS CHESS MOVE EARNED!</div>';
+    $('play').appendChild(banner);
+    const el=$('pf');
+    el.style.background='#ff4400'; el.style.opacity='0.45'; el.style.transition='none';
+    setTimeout(()=>{ el.style.transition='opacity 1s'; el.style.opacity='0'; },200);
+    _bannering=true;
+    setTimeout(()=>{
+      banner.remove();
+      _bannering=false;
+      if(!over) enterChess();
+    },2400);
+  }
+
+  function tick(ts){
+    if(over){ra=null;return;}
+    const dt=Math.min((ts-lt)/1000,0.05); lt=ts;
+    ra=requestAnimationFrame(tick);
+    if(!_bannering) timer-=dt;   // pause countdown during bonus banner
+    const d=Math.max(0,Math.ceil(timer));
+    const el=$('tmd');
+    el.textContent=String(d).padStart(2,'0');
+    el.className='td'+(timer<10?' urg':'');
+    if(timer<=0&&!_bannering){
+      timer=9999; // prevent re-entry until enterChess/enterTanks resets it
+      if(phase==='chess') enterTanks(); else enterChess();
+    }
+  }
+
+  function endGame(title,sub){
+    if(over) return;
+    over=true; _chessOk=false; Tanks.disable();
+    const p1w=Chess.getP1IsWhite();
+    const isDraw=sub.indexOf('STALEMATE')>=0||sub.indexOf('DRAW')>=0;
+    const whiteWon=sub.indexOf('WHITE')>=0;
+    const blackWon=sub.indexOf('BLACK')>=0;
+    const p1won=!isDraw&&((p1w&&whiteWon)||(!p1w&&blackWon));
+    const p2won=!isDraw&&((p1w&&blackWon)||(!p1w&&whiteWon));
+    // In vs-bot mode, P1 is the human
+    const el=$('ov-result');
+    if(p1won){
+      el.textContent='YOU WIN!'; el.className='win';
+    } else if(p2won){
+      el.textContent='YOU LOSE'; el.className='lose';
+    } else {
+      // Forfeit or unknown
+      el.textContent=isDraw?'DRAW!':'GAME OVER'; el.className='draw';
+    }
+    $('ov-sub').textContent=sub;
+    // Draw the mini board strip decoration
+    _drawOvBoard(p1won);
+    $('ov').classList.add('on');
+    updHUD();
+  }
+  function _drawOvBoard(p1won){
+    const el=$('ov-board'); el.innerHTML='';
+    // 10 alternating squares, matching board colors
+    for(let i=0;i<10;i++){
+      const sq=document.createElement('div');
+      const lt=i%2===0;
+      sq.style.cssText='flex:1;height:100%;background:'+(lt?'#282438':'#0e0c18')+';';
+      // Place a chess piece symbol on some squares for decoration
+      if(i===2){sq.textContent=p1won?'♛':'♔';sq.style.fontSize='18px';sq.style.display='flex';sq.style.alignItems='center';sq.style.justifyContent='center';sq.style.color=p1won?'#f0e0a0':'#303030';sq.style.textShadow='1px 1px 0 rgba(0,0,0,0.5)';}
+      if(i===7){sq.textContent=p1won?'♚':'♛';sq.style.fontSize='18px';sq.style.display='flex';sq.style.alignItems='center';sq.style.justifyContent='center';sq.style.color=p1won?'#383838':'#f0e0a0';sq.style.textShadow='1px 1px 0 rgba(0,0,0,0.5)';}
+      el.appendChild(sq);
+    }
+  }
+
+  function updHUD(){
+    const h1=Tanks.hp1(),h2=Tanks.hp2();
+    const inTanks=(phase==='tanks');
+    $('b1h').style.width=(inTanks?h1:100)+'%';
+    $('b2h').style.width=(inTanks?h2:100)+'%';
+    $('b1s').style.width=(inTanks?Tanks.sh1():100)+'%';
+    $('b2s').style.width=(inTanks?Tanks.sh2():100)+'%';
+    const c=v=>v>60?'#ff6600':v>30?'#ffaa00':'#ff2200';
+    $('b1h').style.background=inTanks?c(h1):'#1a3010';
+    $('b2h').style.background=inTanks?c(h2):'#301010';
+    $('b1s').style.background=inTanks?'#ff8800':'#181820';
+    $('b2s').style.background=inTanks?'#ff8800':'#181820';
+  }
+
+  function forfeit(){
+    if(over) return;
+    over=true; _chessOk=false;
+    if(ra){cancelAnimationFrame(ra);ra=null;}
+    Tanks.disable();
+    const el=$('ov-result');
+    el.textContent='FORFEIT'; el.className='draw';
+    $('ov-sub').textContent='Game ended early';
+    _drawOvBoard(false);
+    $('ov').classList.add('on');
+    show('s-match');
+  }
+  return{
+    start, startNet, updHUD, forfeit, netEnterTanks, netEnterChess,
+    get chessOk(){return _chessOk;},
+    getBot:()=>bot,
+    getBonusSide:()=>_bonusSide,
+    clearBonus:()=>{_bonusSide=null; Chess.refreshUpd();},
+  };
+})();
+
+// ═══════════════════════════════════════════════
+//  NETWORK — WebSocket relay multiplayer
+//  Primary:  wss://relay.piesocket.com (free, reliable)
+//  Fallback: wss://ws.postman-echo.com/raw (echo-based)
+//  Same-device: BroadcastChannel (always works, instant)
+// ═══════════════════════════════════════════════
+const Net=(()=>{
+  // Multiple relay options tried in order
+  const RELAYS=[
+    code=>`wss://relay.piesocket.com/v3/${code}?api_key=oCdCMcMPQpbvNjui4geHVjoB1epUh28hnkVbgSHo&notify_self=0`,
+    code=>`wss://socketsbay.com/wss/v2/1/${code}/`,
+  ];
+
+  let ws=null, bc=null;
+  let isHost=false, _roomCode='', _connected=false;
+  let _onMsg=null, _onReady=null, _onError=null;
+  let _peerId=null;
+  let _relayIdx=0;
+  let _destroyed=false;
+
+  function _genId(){ return Math.random().toString(36).slice(2,10); }
+
+  function onMsg(fn){ _onMsg=fn; }
+  function onReady(fn){ _onReady=fn; }
+
+  function send(msg){
+    const pkt=JSON.stringify({...msg,_from:_peerId});
+    if(ws&&ws.readyState===1) ws.send(pkt);
+    if(bc) bc.postMessage(pkt);
+  }
+
+  function _handleRaw(raw){
+    try{
+      const msg=JSON.parse(raw);
+      if(msg._from===_peerId) return;
+      if(msg.type==='hello'){
+        if(!_connected){
+          _connected=true;
+          send({type:'hello'}); // always reply so other side also connects
+          if(_onReady) _onReady();
+        }
+        return;
+      }
+      if(_onMsg) _onMsg(msg);
+    }catch(e){}
+  }
+
+  function _tryNextRelay(code){
+    if(_destroyed) return;
+    _relayIdx++;
+    if(_relayIdx<RELAYS.length){
+      console.log('[Net] trying relay',_relayIdx);
+      _connectWS(code);
+    } else {
+      // All WS relays failed — BroadcastChannel still works for same-device
+      console.warn('[Net] all WS relays failed, same-device only');
+      // Don't fire error if bc is working (same device)
+    }
+  }
+
+  function _connectWS(code){
+    if(_destroyed) return;
+    try{
+      const url=RELAYS[_relayIdx](code);
+      ws=new WebSocket(url);
+      let opened=false;
+      ws.onopen=()=>{
+        opened=true;
+        console.log('[Net] WS connected via relay',_relayIdx);
+        if(isHost) send({type:'hello'});
+      };
+      ws.onmessage=e=>_handleRaw(e.data);
+      ws.onerror=()=>{
+        if(!opened) _tryNextRelay(code); // only fall through if never opened
+      };
+      ws.onclose=()=>{ if(!_destroyed&&!opened) _tryNextRelay(code); ws=null; };
+    }catch(e){ _tryNextRelay(code); }
+  }
+
+  function _openRoom(code){
+    _roomCode=code; _peerId=_genId(); _connected=false; _relayIdx=0; _destroyed=false;
+
+    // BroadcastChannel — works instantly for same browser/device
+    try{
+      bc=new BroadcastChannel('chesstanks_'+code);
+      bc.onmessage=e=>_handleRaw(e.data);
+    }catch(e){ bc=null; }
+
+    // WebSocket relay for cross-device
+    _connectWS(code);
+  }
+
+  function host(onCode, onP2Ready){
+    isHost=true; _onReady=onP2Ready;
+    const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
+    let code='';
+    for(let i=0;i<4;i++) code+=alpha[Math.floor(Math.random()*alpha.length)];
+    _openRoom(code);
+    setTimeout(()=>onCode(code),50);
+  }
+
+  function hostWithCode(code, onP2Ready){
+    isHost=true; _onReady=onP2Ready;
+    _openRoom(code.toUpperCase());
+  }
+
+  function join(code, onConnected, onError){
+    isHost=false; _onReady=onConnected; _onError=onError;
+    _openRoom(code.toUpperCase());
+    // Send hello after a moment so WS has time to open
+    setTimeout(()=>{ if(!_destroyed) send({type:'hello'}); }, 600);
+    // Also retry hello — sometimes packets get lost
+    setTimeout(()=>{ if(!_destroyed&&!_connected) send({type:'hello'}); }, 2000);
+    setTimeout(()=>{ if(!_destroyed&&!_connected) send({type:'hello'}); }, 4000);
+    // Timeout after 12s
+    const t=setTimeout(()=>{
+      if(!_connected){
+        // If same-device (bc exists), don't show error — just wait
+        if(!bc&&onError) onError('timeout');
+        else if(bc&&onError) onError('timeout'); // even with bc, if no response it's stuck
+      }
+    },12000);
+    const orig=_onReady;
+    _onReady=()=>{ clearTimeout(t); if(orig) orig(); };
+  }
+
+  function destroy(){
+    _destroyed=true;
+    if(ws) try{ws.close();}catch(e){}
+    if(bc) try{bc.close();}catch(e){}
+    ws=null; bc=null; _connected=false; isHost=false; _roomCode='';
+  }
+
+  function getIsHost(){ return isHost; }
+  function isConnected(){ return _connected; }
+
+  return{host,hostWithCode,join,send,onMsg,onReady,destroy,getIsHost,isConnected};
+})();
+// ═══════════════════════════════════════════════
+//  WIRING
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  $('b-bot').onclick=()=>loading(()=>Match.start(true));
+  $('b-pvp').onclick=()=>showLobby();
+  $('b-rematch').onclick=()=>{
+    if(Net.isConnected()) netRematch();
+    else loading(()=>Match.start(Match.getBot()));
+  };
+  $('b-forfeit').onclick=()=>{
+    if(Net.isConnected()) Net.send({type:'forfeit'});
+    Match.forfeit();
+  };
+  $('b-mm').onclick=()=>{ Net.destroy(); show('s-menu'); };
+
+  function showLobby(){
+    Net.destroy();
+    $('lob-choice').style.display='';
+    $('lob-hosting').style.display='none';
+    $('lob-joining').style.display='none';
+    $('lob-ready').style.display='none';
+    $('lob-err').textContent='';
+    ['lob-c1','lob-c2','lob-c3','lob-c4'].forEach(id=>$(id).value='');
+    show('s-lobby');
+  }
+
+  // ── HOST ──
+  function _randCode(){
+    const alpha='ABCDEFGHJKLMNPQRSTUVWXYZ';
+    return Array.from({length:4},()=>alpha[Math.floor(Math.random()*alpha.length)]).join('');
+  }
+
+  $('b-lhost').onclick=()=>{
+    $('lob-choice').style.display='none';
+    $('lob-hosting').style.display='';
+    $('lob-pick-code').style.display='';
+    $('lob-waiting').style.display='none';
+    $('host-code-err').textContent='';
+    // Pre-fill with a random code so user can keep or change it
+    const rand=_randCode();
+    ['host-c1','host-c2','host-c3','host-c4'].forEach((id,i)=>$(id).value=rand[i]);
+    setTimeout(()=>$('host-c1').focus(),50);
+  };
+
+  // Auto-advance host code inputs
+  ['host-c1','host-c2','host-c3','host-c4'].forEach((id,i,arr)=>{
+    const el=$(id);
+    el.addEventListener('input',()=>{
+      el.value=el.value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,1);
+      if(el.value&&i<arr.length-1) $(arr[i+1]).focus();
+    });
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!el.value&&i>0){ $(arr[i-1]).focus(); e.preventDefault(); }
+      if(e.key==='Enter') $('b-lhconfirm').click();
+    });
+  });
+
+  $('b-lhconfirm').onclick=()=>{
+    const code=['host-c1','host-c2','host-c3','host-c4'].map(id=>$(id).value.toUpperCase()).join('');
+    if(code.length!==4||code.includes(' ')){
+      $('host-code-err').textContent='✗ ENTER ALL 4 LETTERS';
+      return;
+    }
+    $('lob-pick-code').style.display='none';
+    $('lob-waiting').style.display='';
+    $('lobby-code').textContent=code;
+    $('lob-status').textContent='⏳ WAITING FOR P2 TO JOIN...';
+    Net.hostWithCode(code,
+      ()=>{ // P2 connected
+        $('lob-hosting').style.display='none';
+        $('lob-ready').style.display='';
+        $('lob-ready-role').textContent='YOU ARE P1 (WHITE) · WASD + SPACE';
+        setTimeout(()=>$('b-lstart').focus(),50);
+      }
+    );
+  };
+
+  $('b-lhback').onclick=()=>{ Net.destroy(); showLobby(); };
+  $('b-lhcancel').onclick=()=>{ Net.destroy(); showLobby(); };
+
+  // ── JOIN ──
+  $('b-ljoinbtn').onclick=()=>{
+    $('lob-choice').style.display='none';
+    $('lob-joining').style.display='';
+    $('lob-err').textContent='';
+    ['lob-c1','lob-c2','lob-c3','lob-c4'].forEach(id=>$(id).value='');
+    setTimeout(()=>$('lob-c1').focus(),50);
+  };
+
+  // Code input auto-advance
+  ['lob-c1','lob-c2','lob-c3','lob-c4'].forEach((id,i,arr)=>{
+    const el=$(id);
+    el.addEventListener('input',()=>{
+      el.value=el.value.toUpperCase().replace(/[^A-Z]/g,'').slice(0,1);
+      if(el.value&&i<arr.length-1) $(arr[i+1]).focus();
+    });
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!el.value&&i>0){ $(arr[i-1]).focus(); e.preventDefault(); }
+      if(e.key==='Enter') $('b-ljoin').click();
+    });
+  });
+
+  $('b-ljoin').onclick=()=>{
+    const code=(['lob-c1','lob-c2','lob-c3','lob-c4'].map(id=>$(id).value).join(''));
+    if(code.length!==4){ $('lob-err').textContent='✗ ENTER ALL 4 LETTERS'; return; }
+    $('lob-err').textContent='⏳ CONNECTING...';
+    Net.join(code,
+      ()=>{ // connected
+        $('lob-joining').style.display='none';
+        $('lob-ready').style.display='';
+        $('lob-ready-role').textContent='YOU ARE P2 (BLACK) · ARROWS + ENTER';
+        $('b-lstart').style.display='none'; // P2 waits for P1 to start
+        const waitDiv=document.createElement('div');
+        waitDiv.id='lob-p2-wait';
+        waitDiv.style.cssText='font-size:6px;color:#6ab0f0;margin-bottom:12px';
+        waitDiv.textContent='⏳ WAITING FOR P1 TO START...';
+        $('lob-ready').insertBefore(waitDiv,$('b-lstart'));
+      },
+      (err)=>{
+        $('lob-err').textContent='✗ NO RESPONSE — CHECK CODE & RETRY';
+        setTimeout(()=>{ $('lob-err').textContent=''; },5000);
+      }
+    );
+  };
+
+  $('b-ljback').onclick=()=>{ Net.destroy(); showLobby(); };
+  $('b-lback').onclick=()=>show('s-menu');
+
+  // Back from ready
+  $('b-lrback').onclick=()=>{ Net.destroy(); showLobby(); };
+
+  // P1 starts the game
+  $('b-lstart').onclick=()=>{
+    if(!Net.isConnected()){ $('lob-err').textContent='✗ P2 NOT CONNECTED YET'; return; }
+    const seed=Math.floor(Math.random()*99999);
+    Net.send({type:'start',seed});
+    loading(()=>startNetGame(seed, true));
+  };
+
+  // Single permanent message dispatcher — handles all net messages throughout session
+  Net.onMsg(msg=>{
+    switch(msg.type){
+      case 'start':
+        loading(()=>startNetGame(msg.seed, false));
+        break;
+      case 'rematch':
+        loading(()=>startNetGame(msg.seed, false));
+        break;
+      case 'forfeit':
+        Match.forfeit();
+        break;
+      case 'chess':
+        Chess.applyNetMove(msg.fr, msg.fc, msg.tr, msg.tc);
+        break;
+      case 'tank_inp':
+        Tanks.setRemoteInp(msg.inp);
+        break;
+      case 'phase':
+        // Host broadcasts phase changes so both stay in sync
+        if(!Net.getIsHost()){
+          if(msg.phase==='tanks') Match.netEnterTanks();
+          else                    Match.netEnterChess();
+        }
+        break;
+    }
+  });
+
+  function startNetGame(seed, host){
+    // Seed the map selection
+    _netSeed=seed;
+    Match.startNet(seed, host);
+  }
+
+  function netRematch(){
+    const seed=Math.floor(Math.random()*99999);
+    Net.send({type:'rematch',seed});
+    loading(()=>startNetGame(seed,Net.getIsHost()));
+  }
+});
+</script>
+</body>
+</html>
